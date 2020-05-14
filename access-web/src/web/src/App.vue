@@ -1,29 +1,19 @@
 <template>
-  <div class="container app-access">
-    <div class="nav nav-pills justify-content-center">
-      <div class="nav-item">
-        <router-link class="nav-link" active-class="active" to="/" exact>Home</router-link>
-      </div>
-      <div class="nav-item">
-        <router-link class="nav-link" active-class="active" to="/requests">My Requests</router-link>
-      </div>
-      <div class="nav-item">
-        <router-link class="nav-link" active-class="active" to="/about">About</router-link>
-      </div>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-content>
+      <v-container>
+        <v-tabs right>
+          <v-tab to="/">Home</v-tab>
+          <v-tab to="/requests">My Requests</v-tab>
+          <v-tab to="/about">About</v-tab>
+        </v-tabs>
+        <router-view class="pt-10"></router-view>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <style>
 
-.app-access {
-  padding-top: 5px;
-}
 
-.nav-pills > div > a.active {
-    background-color: black !important;
-}
-
-@import'~bootstrap/dist/css/bootstrap.css'
 </style>
