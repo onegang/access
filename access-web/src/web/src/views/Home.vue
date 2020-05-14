@@ -1,12 +1,6 @@
 <template>
   <div class="home">
     <div>
-      <v-text-field
-        clearable
-        outlined
-        label="Find users..."
-        prepend-inner-icon="mdi-magnify"
-      ></v-text-field>
     </div>
     <UsersTable msg="Welcome to My Access"/>
   </div>
