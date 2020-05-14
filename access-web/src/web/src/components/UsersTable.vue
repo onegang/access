@@ -27,9 +27,17 @@
           md="4"
           lg="3"
         >
-          <v-card>
-            <v-card-title class="subheading font-weight-bold">{{ item.name }}</v-card-title>
-
+          <v-card ripple @click="item.selected = !item.selected">
+            <v-card-title class="subheading font-weight-bold">
+              <v-icon class="pr-2" v-if="item.selected">mdi-checkbox-marked-outline</v-icon>
+              {{ item.name }}
+            </v-card-title>
+            <!-- <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn icon>
+                <v-icon>mdi-checkbox-marked-outline</v-icon>
+              </v-btn>
+            </v-card-actions> -->
             <v-divider></v-divider>
 
             <v-list dense>
@@ -125,57 +133,68 @@ export default {
         'Name',
         'Roles',
         'Active',
+        'Selected',
       ],
       items: [
         {
           name: 'John Lee, 1001',
           roles: 'Administrator',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Mary Jane, 1002',
           roles: 'Analyst',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Jane Doe, 1003',
           roles: 'Analyst',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Cooper Down, 2001',
           roles: 'Researcher',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Cooper Down Jr, 2010',
           roles: 'Researcher',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Jelly Jim, 3001',
           roles: 'Analyst',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Tom Holly, 3002',
           roles: 'Analyst',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Kitkat Teck, 3003',
           roles: 'Analyst',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Kylie Key, 3012',
           roles: 'Analyst',
           active: 'Yes',
+          selected: false,
         },
         {
           name: 'Morthone To, 3020',
           roles: 'Analyst',
           active: 'Yes',
+          selected: false,
         },
       ],
     };
