@@ -133,7 +133,6 @@ export default {
         'Name',
         'Roles',
         'Active',
-        'Selected',
       ],
       items: [
         {
