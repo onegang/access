@@ -1,6 +1,6 @@
 <template>
   <v-data-iterator
-    :items="items"
+    :items="USERS"
     :items-per-page.sync="itemsPerPage"
     :page="page"
     :search="search"
@@ -27,20 +27,21 @@
           md="4"
           lg="3"
         >
-          <v-card ripple @click="item.selected = !item.selected">
-            <v-card-title class="subheading font-weight-bold">
+          <v-card ripple @click="item.selected = !item.selected"
+            class="app-table-card"
+            v-bind:class="{'text--disabled': !item.active}">
+            <v-card-title class="subheading" 
+              v-bind:class="{'font-weight-bold': item.active}">
               <v-icon class="pr-2" v-if="item.selected">mdi-checkbox-marked-outline</v-icon>
               {{ item.name }}
+              <div v-if="!item.active">(Deactivated)</div>
             </v-card-title>
-            <!-- <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-checkbox-marked-outline</v-icon>
-              </v-btn>
-            </v-card-actions> -->
             <v-divider></v-divider>
 
-            <v-list dense>
+            <div class="app-table-role  px-5">
+              {{ item.roles.join('\n') }}
+            </div>
+            <!-- <v-list dense>
               <v-list-item
                 v-for="(key, index) in filteredKeys"
                 :key="index"
@@ -48,9 +49,9 @@
                 <v-list-item-content :class="{ 'blue--text':
                   sortBy === key }">{{ key }}:</v-list-item-content>
                 <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">
-                  {{ item[key.toLowerCase()] }}</v-list-item-content>
+                  {{ Array.isArray(item[key.toLowerCase()]) ? item[key.toLowerCase()].join() : item[key.toLowerCase()] }}</v-list-item-content>
               </v-list-item>
-            </v-list>
+            </v-list> -->
           </v-card>
         </v-col>
       </v-row>
@@ -115,112 +116,61 @@
 </template>
 
 <script>
-export default {
-  // name: 'UsersTable',
-  // props: {
-  //   msg: String,
-  // },
-  data() {
-    return {
-      itemsPerPageArray: [4, 8, 12],
-      search: '',
-      filter: {},
-      sortDesc: false,
-      page: 1,
-      itemsPerPage: 4,
-      sortBy: 'name',
-      keys: [
-        'Name',
-        'Roles',
-        'Active',
-      ],
-      items: [
-        {
-          name: 'John Lee, 1001',
-          roles: 'Administrator',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Mary Jane, 1002',
-          roles: 'Analyst',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Jane Doe, 1003',
-          roles: 'Analyst',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Cooper Down, 2001',
-          roles: 'Researcher',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Cooper Down Jr, 2010',
-          roles: 'Researcher',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Jelly Jim, 3001',
-          roles: 'Analyst',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Tom Holly, 3002',
-          roles: 'Analyst',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Kitkat Teck, 3003',
-          roles: 'Analyst',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Kylie Key, 3012',
-          roles: 'Analyst',
-          active: 'Yes',
-          selected: false,
-        },
-        {
-          name: 'Morthone To, 3020',
-          roles: 'Analyst',
-          active: 'Yes',
-          selected: false,
-        },
-      ],
-    };
-  },
-  computed: {
-    numberOfPages() {
-      return Math.ceil(this.items.length / this.itemsPerPage);
+
+  import {mapGetters} from 'vuex';
+
+  export default {
+    mounted() {
+      this.$store.dispatch('GET_USERS');
     },
-    filteredKeys() {
-      return this.keys.filter((key) => (key !== 'Name'));
+    data() {
+      return {
+        itemsPerPageArray: [8, 16, 32],
+        search: '',
+        filter: {},
+        sortDesc: false,
+        page: 1,
+        itemsPerPage: 8,
+        sortBy: 'name',
+        keys: [
+          'Name',
+          'Roles',
+          'Active',
+        ],
+        items: [],
+      };
     },
-  },
-  methods: {
-    nextPage() {
-      if (this.page + 1 <= this.numberOfPages) this.page += 1;
+    computed: {
+      numberOfPages() {
+        return Math.ceil(this.$store.getters.USERS.length / this.itemsPerPage);
+        //return Math.ceil(this.items.length / this.itemsPerPage);
+      },
+      filteredKeys() {
+        return this.keys.filter((key) => (key !== 'Name'));
+      },
+      ...mapGetters(['USERS']),
     },
-    formerPage() {
-      if (this.page - 1 >= 1) this.page -= 1;
+    methods: {
+      nextPage() {
+        if (this.page + 1 <= this.numberOfPages) this.page += 1;
+      },
+      formerPage() {
+        if (this.page - 1 >= 1) this.page -= 1;
+      },
+      updateItemsPerPage(number) {
+        this.itemsPerPage = number;
+      },
     },
-    updateItemsPerPage(number) {
-      this.itemsPerPage = number;
-    },
-  },
-};
+  };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .app-table-card {
+    max-height: 200px;
+  }
+  .app-table-role {
+    white-space: pre-line;
+    height: 150px;
+  }
 </style>
