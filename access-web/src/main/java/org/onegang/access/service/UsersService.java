@@ -2,6 +2,7 @@ package org.onegang.access.service;
 
 import java.util.Collection;
 
+import org.onegang.access.dao.UsersDao;
 import org.onegang.access.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

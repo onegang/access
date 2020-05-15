@@ -1,4 +1,4 @@
-package org.onegang.access.service;
+package org.onegang.access.dao;
 
 import java.util.Collection;
 import java.util.List;
