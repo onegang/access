@@ -1,4 +1,8 @@
 language: java
+cache:
+  directories:
+    - $HOME/.m2
+    - access-web/src/web/node_modules
 notifications:
   email:
     recipients:
