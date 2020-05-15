@@ -181,7 +181,7 @@
             <version>2.2.0</version>
             <configuration>
               <to>
-                <image>access:latest</image>
+                <image>access-web:latest</image>
               </to>
             </configuration>
             <executions>
