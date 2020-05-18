@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Fractals from '../components/Fractals.vue';
+import Fractals from '../components/about/Fractals.vue';
 
 export default {
   name: 'About',

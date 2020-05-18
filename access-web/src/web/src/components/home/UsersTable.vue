@@ -132,7 +132,7 @@
     },
     computed: {
       numberOfPages() {
-        return Math.ceil(this.$store.getters.USERS.length / this.itemsPerPage);
+        return Math.ceil(this.USERS.length / this.itemsPerPage);
       },
       ...mapGetters(['USERS']),
     },

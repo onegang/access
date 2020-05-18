@@ -15,6 +15,7 @@ export default new Vuex.Store({
   getters: {
     USERS: (state) => state.users,
     WORKFLOW: (state) => state.workflow,
+    STAGE: (state) => state.workflow.stage,
   },
   mutations: {
     SET_USERS: (state, payload) => {
