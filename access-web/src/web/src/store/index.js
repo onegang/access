@@ -7,13 +7,21 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     users: [],
+    workflow: {
+      stage: 0,
+      comments: null,
+    },
   },
   getters: {
     USERS: (state) => state.users,
+    WORKFLOW: (state) => state.workflow,
   },
   mutations: {
     SET_USERS: (state, payload) => {
       state.users = payload;
+    },
+    SET_WF_STAGE: (state, payload) => {
+      state.workflow.stage = payload;
     },
   },
   actions: {
@@ -26,6 +34,9 @@ export default new Vuex.Store({
       console.log('committed: ' + data)
       // context.commit('ADD_TODO',payload)
     },
+    SET_STAGE: (context, stage) => {
+      context.commit('SET_WF_STAGE', stage)
+    }
   },
   modules: {
   },
