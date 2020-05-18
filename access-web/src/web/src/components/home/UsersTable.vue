@@ -111,7 +111,8 @@
 
   export default {
     mounted() {
-      this.$store.dispatch('GET_USERS');
+      if(this.USERS.length===0)
+        this.$store.dispatch('GET_USERS');
     },
     data() {
       return {
