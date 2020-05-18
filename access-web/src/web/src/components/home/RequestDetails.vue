@@ -51,7 +51,7 @@
         <v-col cols="12" md="12">
           <v-textarea
             v-model="comments"
-            label="Comments"
+            label="Comments (Optional)"
             clearable
           ></v-textarea>
         </v-col>
@@ -62,15 +62,21 @@
 
 <script>
 
+import { mapFields } from 'vuex-map-fields';
+
 export default {
   data: () => ({
-    effectiveDate: new Date().toISOString().substr(0, 10),
-    expiryDate: null,
     effectiveDateMenu: false,
     expiryDateMenu: false,
-    comments: null,
     valid: false,
-    }),
+  }),
+  computed: {
+    ...mapFields([
+      'requestForm.effectiveDate',
+      'requestForm.expiryDate',
+      'requestForm.comments',
+    ]),
+  },
 };
 </script>
 

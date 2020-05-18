@@ -1,28 +1,33 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from 'axios'
+import { getField, updateField } from 'vuex-map-fields';
+import axios from 'axios';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     users: [],
-    workflow: {
-      stage: 0,
+    stage: 0,
+    requestForm: {
+      effectiveDate: new Date().toISOString().substr(0, 10),
+      expiryDate: null,
       comments: null,
     },
   },
   getters: {
+    getField,
     USERS: (state) => state.users,
-    WORKFLOW: (state) => state.workflow,
-    STAGE: (state) => state.workflow.stage,
+    STAGE: (state) => state.stage,
+    REQUESTFORM: (state) => state.requestForm,
   },
   mutations: {
+    updateField,
     SET_USERS: (state, payload) => {
       state.users = payload;
     },
-    SET_WF_STAGE: (state, payload) => {
-      state.workflow.stage = payload;
+    SET_STAGE: (state, payload) => {
+      state.stage = payload;
     },
   },
   actions: {
@@ -36,7 +41,7 @@ export default new Vuex.Store({
       // context.commit('ADD_TODO',payload)
     },
     SET_STAGE: (context, stage) => {
-      context.commit('SET_WF_STAGE', stage)
+      context.commit('SET_STAGE', stage)
     }
   },
   modules: {
