@@ -6,6 +6,7 @@
     :search="search"
     :sort-by="sortBy.toLowerCase()"
     :sort-desc="sortDesc"
+    :custom-filter="filterUsers"
     hide-default-footer
   >
   <template v-slot:header>
@@ -41,17 +42,6 @@
             <div class="app-table-role  px-5">
               {{ item.roles.join('\n') }}
             </div>
-            <!-- <v-list dense>
-              <v-list-item
-                v-for="(key, index) in filteredKeys"
-                :key="index"
-              >
-                <v-list-item-content :class="{ 'blue--text':
-                  sortBy === key }">{{ key }}:</v-list-item-content>
-                <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">
-                  {{ Array.isArray(item[key.toLowerCase()]) ? item[key.toLowerCase()].join() : item[key.toLowerCase()] }}</v-list-item-content>
-              </v-list-item>
-            </v-list> -->
           </v-card>
         </v-col>
       </v-row>
@@ -142,11 +132,7 @@
     },
     computed: {
       numberOfPages() {
-        return Math.ceil(this.$store.getters.USERS.length / this.itemsPerPage);
-        //return Math.ceil(this.items.length / this.itemsPerPage);
-      },
-      filteredKeys() {
-        return this.keys.filter((key) => (key !== 'Name'));
+        return Math.ceil(this.USERS.length / this.itemsPerPage);
       },
       ...mapGetters(['USERS']),
     },
@@ -160,11 +146,32 @@
       updateItemsPerPage(number) {
         this.itemsPerPage = number;
       },
+      filterUsers(items, search) {
+        if(search) {
+          //we search by terms (separated by spaces)
+          //also allow quoted terms and ignore case
+          const searchTerms = search.match(/(?:[^\s"]+|"[^"]*")+/g).
+            map(term => term.toLowerCase().replace(/^"(.*)"$/, '$1'));
+          return items.filter(user => {
+            //then we match by user name or roles
+            const userValues = [user.name, ...user.roles].map(v => v.toLowerCase());
+            for(const userValue of userValues) {
+              for(const searchTerm of searchTerms) {
+                if(userValue.indexOf(searchTerm) >= 0) {
+                  return true;
+                }
+              }
+            }
+            return false;
+          });
+        } else {
+          return items;
+        }        
+      },
     },
   };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .app-table-card {
     max-height: 200px;
