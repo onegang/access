@@ -13,6 +13,7 @@ export default new Vuex.Store({
       effectiveDate: new Date().toISOString().substr(0, 10),
       expiryDate: null,
       comments: null,
+      attachments: [],
     },
   },
   getters: {

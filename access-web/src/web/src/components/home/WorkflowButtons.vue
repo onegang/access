@@ -42,7 +42,7 @@ export default {
         return "Find and select the users for the access change request";
       } else if(this.STAGE===1) {
         return "Enter the details of the change";
-      } else if(this.STAGE===1) {
+      } else if(this.STAGE===2) {
         return "Review your request and then submit";
       } else {
         return "";
