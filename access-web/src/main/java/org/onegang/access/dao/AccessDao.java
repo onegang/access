@@ -1,15 +1,19 @@
 package org.onegang.access.dao;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.onegang.access.entity.User;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Lists;
 
 @Repository
-public class UsersDao {
+public class AccessDao {
 
 	private static final String[] NAMES = {"Jon Stark",
 			"Anthony Hubbard",
@@ -64,6 +68,8 @@ public class UsersDao {
 	
 	private static final String[] ROLES = {"Administrator", "Analyst", "Researcher", "Developer", "Devops01", "Devops02", "Devops03"};
 	
+	private List<String> roles;
+	
 	public Collection<User> getUsers() {
 		List<User> users = Lists.newArrayList();
 		for(String user: NAMES) {
@@ -74,6 +80,16 @@ public class UsersDao {
 			users.add(new User(name, roles, active));
 		}
 		return users;
+	}
+	
+	public Collection<String> getRoles() throws IOException {
+		if(roles==null) {
+			roles = Lists.newArrayList(ROLES);
+			roles.addAll(FileUtils.readLines(new File(
+					getClass().getClassLoader().getResource("iam-roles.txt").getFile()), "utf-8"));
+			Collections.sort(roles);
+		}
+		return roles;
 	}
 	
 	private Collection<String> getRoles(String name) {

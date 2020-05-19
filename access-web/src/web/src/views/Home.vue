@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <div>
-    </div>
     <WorkflowButtons />
     <transition name="slide-left" mode="out-in">
       <UsersTable v-show="STAGE===0" />

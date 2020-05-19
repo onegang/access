@@ -48,6 +48,12 @@
         </v-col>
       </v-row>
       <v-row>
+        <v-col cols="6" md="4">
+          <v-file-input multiple chips show-size counter v-model="attachments"
+            label="Supporting documents (Optional)"></v-file-input>
+        </v-col>
+      </v-row>
+      <v-row>
         <v-col cols="12" md="12">
           <v-textarea
             v-model="comments"
@@ -56,30 +62,58 @@
           ></v-textarea>
         </v-col>
       </v-row>
+      
+      <div class="padtop"><h3>Please specify the access of each user</h3></div>
+      <v-divider></v-divider>
+      
+      <v-row v-for="user of selectedUsers" v-bind:key="user.name">
+        <v-col cols="12" md="12">
+          <UserDetails class="paduser" v-bind:user="user" />
+        </v-col>
+      </v-row>
     </v-container>
   </v-form>
 </template>
 
 <script>
 
+import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
+import UserDetails from './UserDetails.vue';
 
 export default {
+  components: {
+    UserDetails,
+  },
+  mounted() {
+      if(this.ROLES.length===0)
+        this.$store.dispatch('GET_ROLES');
+    },
   data: () => ({
     effectiveDateMenu: false,
     expiryDateMenu: false,
     valid: false,
   }),
   computed: {
+    selectedUsers() {
+      return this.USERS.filter(user => user.selected);
+    },
+    ...mapGetters(['USERS', 'ROLES']),
     ...mapFields([
       'requestForm.effectiveDate',
       'requestForm.expiryDate',
       'requestForm.comments',
+      'requestForm.attachments',
     ]),
   },
 };
 </script>
 
 <style scoped>
-  
+  .padtop {
+    padding-top: 100px;
+  }
+  .paduser {
+    padding: 15px 10px 10px 10px;
+  }
 </style>

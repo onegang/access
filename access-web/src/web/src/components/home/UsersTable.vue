@@ -8,26 +8,31 @@
     :sort-desc="sortDesc"
     :custom-filter="filterUsers"
     hide-default-footer
+    loading
   >
-  <template v-slot:header>
-    <v-text-field
-      v-model="search"
-      clearable
-      outlined
-      label="Find users..."
-      prepend-inner-icon="mdi-magnify"
-    ></v-text-field>
+    <template v-slot:header>
+      <v-text-field
+        v-model="search"
+        clearable
+        outlined
+        label="Find users..."
+        class="mb-n5"
+        prepend-inner-icon="mdi-magnify" />
+      <v-row v-if="USERS.length===0">
+        <v-col cols="12" sm="6" md="4" lg="3">
+          <v-skeleton-loader type="card-avatar" />
+        </v-col>
+        <v-col cols="12" sm="6" md="4" lg="3">
+          <v-skeleton-loader type="card-avatar" />
+        </v-col>
+      </v-row>
     </template>
     <template v-slot:default="props">
       <v-row>
         <v-col
           v-for="item in props.items"
           :key="item.name"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-        >
+          cols="12" sm="6" md="4" lg="3">
           <v-card ripple @click="item.selected = !item.selected"
             class="app-table-card"
             v-bind:class="{'text--disabled': !item.active}">
@@ -40,7 +45,7 @@
             <v-divider></v-divider>
 
             <div class="app-table-role  px-5">
-              {{ item.roles.join('\n') }}
+              {{ prettifyRoles(item.roles) }}
             </div>
           </v-card>
         </v-col>
@@ -111,7 +116,8 @@
 
   export default {
     mounted() {
-      this.$store.dispatch('GET_USERS');
+      if(this.USERS.length===0)
+        this.$store.dispatch('GET_USERS');
     },
     data() {
       return {
@@ -137,6 +143,16 @@
       ...mapGetters(['USERS']),
     },
     methods: {
+      prettifyRoles(roles) {
+        const MAX = 4;
+        if(roles.length > MAX) {
+          const subset = roles.slice(0, MAX);
+          subset.push("...");
+          return subset.join("\n");
+        } else {
+          return roles.join("\n");
+        }
+      },
       nextPage() {
         if (this.page + 1 <= this.numberOfPages) this.page += 1;
       },
@@ -179,5 +195,6 @@
   .app-table-role {
     white-space: pre-line;
     height: 150px;
+    overflow:hidden;
   }
 </style>

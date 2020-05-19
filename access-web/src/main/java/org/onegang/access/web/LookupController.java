@@ -1,24 +1,23 @@
 package org.onegang.access.web;
 
+import java.io.IOException;
 import java.util.Collection;
 
-import org.onegang.access.entity.User;
-import org.onegang.access.service.UsersService;
+import org.onegang.access.service.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
-public class UsersController {
+@RequestMapping("/api/lookup")
+public class LookupController {
 
 	@Autowired
-	private UsersService usersService;
+	private LookupService lookupService;
 	
-	@GetMapping
-	public Collection<User> getUsers() {
-		return usersService.getUsers();
+	@GetMapping("/roles")
+	public Collection<String> getRoles() throws IOException {
+		return lookupService.getRoles();
 	}
-	
 }
