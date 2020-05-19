@@ -14,13 +14,14 @@
     <div class="inline" v-if="STAGE>=1">
       <v-icon large>mdi-chevron-right</v-icon>
       <v-btn class="ma-2" outlined :color="STAGE===1?'primary':''"
-          @click="toReviewForm">Review Request</v-btn>
+          @click="toReviewForm">Submit Request</v-btn>
     </div>
     <div class="inline" v-if="STAGE>=2">
       <v-icon large>mdi-chevron-right</v-icon>
       <v-btn class="ma-2" outlined :color="STAGE===2?'primary':''"
-          @click="submitForm">Submit Request</v-btn>
+          @click="submitForm">Confirm Request</v-btn>
     </div>
+    <div><h3>{{instructions}}</h3></div>
   </div>
 </template>
 
@@ -35,6 +36,17 @@ export default {
     },
     disabled() {
       return this.numberOfSelected===0;
+    },
+    instructions() {
+      if(this.STAGE===0) {
+        return "Find and select the users for the access change request";
+      } else if(this.STAGE===1) {
+        return "Enter the details of the change";
+      } else if(this.STAGE===1) {
+        return "Review your request and then submit";
+      } else {
+        return "";
+      }
     },
     ...mapGetters(['STAGE', 'USERS']),
   },

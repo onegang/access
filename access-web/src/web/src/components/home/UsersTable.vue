@@ -175,10 +175,10 @@
 
 <style scoped>
   .app-table-card {
-    max-height: 200px;
+    max-height: 180px;
   }
   .app-table-role {
     white-space: pre-line;
-    height: 150px;
+    height: 140px;
   }
 </style>
