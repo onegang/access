@@ -8,26 +8,31 @@
     :sort-desc="sortDesc"
     :custom-filter="filterUsers"
     hide-default-footer
+    loading
   >
-  <template v-slot:header>
-    <v-text-field
-      v-model="search"
-      clearable
-      outlined
-      label="Find users..."
-      prepend-inner-icon="mdi-magnify"
-    ></v-text-field>
+    <template v-slot:header>
+      <v-text-field
+        v-model="search"
+        clearable
+        outlined
+        label="Find users..."
+        class="mb-n5"
+        prepend-inner-icon="mdi-magnify" />
+      <v-row v-if="USERS.length===0">
+        <v-col cols="12" sm="6" md="4" lg="3">
+          <v-skeleton-loader type="card-avatar" />
+        </v-col>
+        <v-col cols="12" sm="6" md="4" lg="3">
+          <v-skeleton-loader type="card-avatar" />
+        </v-col>
+      </v-row>
     </template>
     <template v-slot:default="props">
       <v-row>
         <v-col
           v-for="item in props.items"
           :key="item.name"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-        >
+          cols="12" sm="6" md="4" lg="3">
           <v-card ripple @click="item.selected = !item.selected"
             class="app-table-card"
             v-bind:class="{'text--disabled': !item.active}">
