@@ -7,9 +7,10 @@
       :readonly="readonly"
       :chips="!readonly"
       :filter="filterRoles"
+      :clearable="!readonly"
       @paste="onPaste"
       label="Roles"
-      multiple clearable deletable-chips
+      multiple deletable-chips
     ></v-autocomplete>
   </div>
 </template>

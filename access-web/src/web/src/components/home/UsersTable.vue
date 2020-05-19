@@ -40,7 +40,7 @@
             <v-divider></v-divider>
 
             <div class="app-table-role  px-5">
-              {{ item.roles.join('\n') }}
+              {{ prettifyRoles(item.roles) }}
             </div>
           </v-card>
         </v-col>
@@ -138,6 +138,16 @@
       ...mapGetters(['USERS']),
     },
     methods: {
+      prettifyRoles(roles) {
+        const MAX = 4;
+        if(roles.length > MAX) {
+          const subset = roles.slice(0, MAX);
+          subset.push("...");
+          return subset.join("\n");
+        } else {
+          return roles.join("\n");
+        }
+      },
       nextPage() {
         if (this.page + 1 <= this.numberOfPages) this.page += 1;
       },
@@ -175,10 +185,11 @@
 
 <style scoped>
   .app-table-card {
-    max-height: 180px;
+    max-height: 200px;
   }
   .app-table-role {
     white-space: pre-line;
-    height: 140px;
+    height: 150px;
+    overflow:hidden;
   }
 </style>
