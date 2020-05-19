@@ -85,6 +85,10 @@ export default {
   components: {
     UserDetails,
   },
+  mounted() {
+      if(this.ROLES.length===0)
+        this.$store.dispatch('GET_ROLES');
+    },
   data: () => ({
     effectiveDateMenu: false,
     expiryDateMenu: false,
@@ -94,7 +98,7 @@ export default {
     selectedUsers() {
       return this.USERS.filter(user => user.selected);
     },
-    ...mapGetters(['USERS']),
+    ...mapGetters(['USERS', 'ROLES']),
     ...mapFields([
       'requestForm.effectiveDate',
       'requestForm.expiryDate',

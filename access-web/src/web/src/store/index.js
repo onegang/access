@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    roles: [],
     users: [],
     stage: 0,
     requestForm: {
@@ -18,12 +19,16 @@ export default new Vuex.Store({
   },
   getters: {
     getField,
+    ROLES: (state) => state.roles,
     USERS: (state) => state.users,
     STAGE: (state) => state.stage,
     REQUESTFORM: (state) => state.requestForm,
   },
   mutations: {
     updateField,
+    SET_ROLES: (state, payload) => {
+      state.roles = payload;
+    },
     SET_USERS: (state, payload) => {
       state.users = payload;
     },
@@ -32,17 +37,21 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    GET_ROLES: async (context) => {
+      let { data } = await axios.get('/api/lookup/roles');
+      context.commit('SET_ROLES', data);
+    },
     GET_USERS: async (context) => {
-      let { data } = await axios.get('/api/users')
-      context.commit('SET_USERS', data)
+      let { data } = await axios.get('/api/users');
+      context.commit('SET_USERS', data);
     },
     SAVE_USER: async (context, payload) => {
-      let { data } = await axios.post('/api/user', payload)
-      console.log('committed: ' + data)
+      let { data } = await axios.post('/api/user', payload);
+      console.log('committed: ' + data);
       // context.commit('ADD_TODO',payload)
     },
     SET_STAGE: (context, stage) => {
-      context.commit('SET_STAGE', stage)
+      context.commit('SET_STAGE', stage);
     }
   },
   modules: {
