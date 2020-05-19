@@ -22,6 +22,14 @@
           @click="submitForm">Confirm Request</v-btn>
     </div>
     <div><h3>{{instructions}}</h3></div>
+    <v-snackbar v-model="showSubmitted" top>
+      <span>Submitted your request!</span>
+      <v-btn
+        text color="indigo"
+        @click="showSubmitted = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -30,6 +38,9 @@
 import {mapGetters} from 'vuex';
 
 export default {
+  data: () => ({
+    showSubmitted: false,
+  }),
   computed: {
     numberOfSelected() {
       return this.USERS.filter(user => user.selected).length;
@@ -66,7 +77,8 @@ export default {
       }
     },
     submitForm() {
-      console.log('TODO');
+      this.showSubmitted = true;
+      this.$store.dispatch('SET_STAGE', 0);
     }
   },
 };
