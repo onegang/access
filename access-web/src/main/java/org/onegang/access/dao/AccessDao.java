@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.onegang.access.entity.User;
@@ -80,6 +81,12 @@ public class AccessDao {
 			users.add(new User(name, roles, active));
 		}
 		return users;
+	}
+	
+	public Collection<User> getUsers(Collection<String> names) {
+		return getUsers().stream().filter(user -> {
+			return names.contains(user.getName());
+		}).collect(Collectors.toList());
 	}
 	
 	public Collection<String> getRoles() throws IOException {

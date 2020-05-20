@@ -115,10 +115,6 @@
   import {mapGetters} from 'vuex';
 
   export default {
-    mounted() {
-      if(this.USERS.length===0)
-        this.$store.dispatch('GET_USERS');
-    },
     data() {
       return {
         itemsPerPageArray: [8, 16, 32],

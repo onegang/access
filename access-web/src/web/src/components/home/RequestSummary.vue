@@ -9,7 +9,14 @@
 
     <h3 class="pt-10">Access Changes</h3>
     <v-divider class="pb-3" />
-    <v-skeleton-loader type="paragraph" />
+    <v-skeleton-loader v-if="CHANGES===null" type="paragraph" />
+    <div v-if="!hasChanges">No changes!</div>
+    <div v-if="CHANGES && CHANGES.added">
+      <ChangeItem v-for="(added, index) in CHANGES.added" :key="index" :change="added" type="ADD" />
+    </div>
+    <div v-if="CHANGES && CHANGES.removed">
+      <ChangeItem v-for="(removed, index) in CHANGES.removed" :key="index" :change="removed" type="REMOVE" />
+    </div>
 
     <h3 class="pt-10">Approvals</h3>
     <v-divider class="pb-3" />
@@ -26,16 +33,23 @@
 <script>
 import {mapGetters} from 'vuex';
 import UserDetails from './UserDetails.vue';
+import ChangeItem from './ChangeItem.vue';
 
 export default {
   components: {
     UserDetails,
+    ChangeItem,
   },
   computed: {
     selectedUsers() {
       return this.USERS.filter(user => user.selected);
     },
-    ...mapGetters(['REQUESTFORM', 'USERS']),
+    hasChanges() {
+      if(this.CHANGES===null)
+        return false;
+      return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0;
+    },
+    ...mapGetters(['REQUESTFORM', 'USERS', 'CHANGES']),
   },
 };
 </script>
