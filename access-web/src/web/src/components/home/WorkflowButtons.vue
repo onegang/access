@@ -21,7 +21,21 @@
       <v-btn class="ma-2" outlined :color="STAGE===2?'primary':''" :disabled="!hasChanges"
           @click="submitForm">Confirm Request</v-btn>
     </div>
+    <div class="inline" v-if="!noSelection">
+      <v-tooltip right>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on"
+            class="mx-4"
+            color="blue-grey lighten-4" fab x-small @click="clearForm">
+            <v-icon>mdi-restore</v-icon>
+          </v-btn>
+        </template>
+        <span>Clear and restart the request</span>
+      </v-tooltip>
+    </div>
+
     <div><h3>{{instructions}}</h3></div>
+
     <v-snackbar v-model="showSubmitted" top>
       <span>Submitted your request!</span>
       <v-btn
@@ -38,6 +52,10 @@
 import {mapGetters} from 'vuex';
 
 export default {
+  mounted() {
+    if(this.USERS.length===0)
+      this.$store.dispatch('GET_USERS');
+  },
   data: () => ({
     showSubmitted: false,
   }),
@@ -86,6 +104,10 @@ export default {
     },
     submitForm() {
       this.showSubmitted = true;
+      this.clearForm();
+    },
+    clearForm() {
+      this.$store.dispatch('GET_USERS');
       this.$store.dispatch('SET_STAGE', 0);
     }
   },
