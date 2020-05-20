@@ -7,13 +7,22 @@
           <v-tab to="/requests">My Requests</v-tab>
           <v-tab to="/about">About</v-tab>
         </v-tabs>
-        <!-- <v-card class="mt-10 pa-5"> -->
         <router-view class="pt-3"></router-view>
-      <!-- </v-card> -->
+        <ErrorDialog />
       </v-container>
     </v-content>
   </v-app>
 </template>
+
+<script>
+import ErrorDialog from './components/utils/ErrorDialog.vue';
+
+export default {
+  components: {
+    ErrorDialog,
+  },
+};
+</script>
 
 <style>
 
