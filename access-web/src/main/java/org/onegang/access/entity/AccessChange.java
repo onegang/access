@@ -52,7 +52,7 @@ public class AccessChange {
 	}
 	
 	
-	class Change {
+	public class Change {
 	
 		private Collection<String> usernames;
 	
@@ -71,6 +71,6 @@ public class AccessChange {
 		public Collection<String> getRoles() {
 			return roles;
 		}
-		
+
 	}
 }

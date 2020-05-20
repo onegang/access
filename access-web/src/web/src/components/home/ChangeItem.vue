@@ -4,19 +4,20 @@
     <span v-if="change.roles.length==1">role</span>
     <span v-if="change.roles.length>1">{{change.roles.length}} roles</span> 
     <v-chip v-for="(role, index) in change.roles" :key="index"
-      class="mx-1"
-      label
-      outlined
-      small
       :color="color"
-    >{{role}}</v-chip> 
+      class="mx-1" label outlined small>
+      {{role}}
+    </v-chip> 
     {{type==="ADD"?"to":"from"}}
-    {{change.usernames.join(", ")}}
+    <v-chip v-for="(name, index) in change.usernames" :key="index"
+      class="mx-1" label outlined small>
+      <v-avatar left><v-icon>mdi-account-outline</v-icon></v-avatar>
+      {{name}}
+    </v-chip>
   </div>
 </template>
 
 <script>
-
 export default {
   props: {
     change: {
@@ -40,5 +41,7 @@ export default {
 </script>
 
 <style scoped>
-  
+  .underline {
+    text-decoration: underline;
+  }
 </style>
