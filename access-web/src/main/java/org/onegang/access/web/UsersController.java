@@ -2,6 +2,7 @@ package org.onegang.access.web;
 
 import java.util.Collection;
 
+import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.User;
 import org.onegang.access.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class UsersController {
 	}
 	
 	@PostMapping("/changes")
-	public Collection<User> getChanges(@RequestBody Collection<User> users) {
-		return users;
+	public AccessChange getChanges(@RequestBody Collection<User> users) {
+		return usersService.computeChanges(users);
 	}
 	
 }

@@ -8,7 +8,7 @@
         offset-x="25"
         offset-y="25"
       >
-      <v-btn class="ma-2" outlined :color="STAGE===0?'primary':''" :disabled="disabled"
+      <v-btn class="ma-2" outlined :color="STAGE===0?'primary':''" :disabled="noSelection"
         @click="toAccessForm">New Request</v-btn>
     </v-badge>
     <div class="inline" v-if="STAGE>=1">
@@ -18,7 +18,7 @@
     </div>
     <div class="inline" v-if="STAGE>=2">
       <v-icon large>mdi-chevron-right</v-icon>
-      <v-btn class="ma-2" outlined :color="STAGE===2?'primary':''"
+      <v-btn class="ma-2" outlined :color="STAGE===2?'primary':''" :disabled="!hasChanges"
           @click="submitForm">Confirm Request</v-btn>
     </div>
     <div><h3>{{instructions}}</h3></div>
@@ -45,8 +45,13 @@ export default {
     numberOfSelected() {
       return this.USERS.filter(user => user.selected).length;
     },
-    disabled() {
+    noSelection() {
       return this.numberOfSelected===0;
+    },
+    hasChanges() {
+      if(this.CHANGES===null)
+        return false;
+      return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0;
     },
     instructions() {
       if(this.STAGE===0) {
@@ -54,12 +59,15 @@ export default {
       } else if(this.STAGE===1) {
         return "Enter the details of the change";
       } else if(this.STAGE===2) {
-        return "Review your request and then submit";
+        if(this.hasChanges)
+          return "Review your request and then submit";
+        else
+          return "No access changes specified. Please go back and specify the changes.";
       } else {
         return "";
       }
     },
-    ...mapGetters(['STAGE', 'USERS']),
+    ...mapGetters(['STAGE', 'USERS', 'CHANGES']),
   },
   methods: {
     toAccessForm() {

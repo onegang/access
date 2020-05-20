@@ -17,6 +17,7 @@ const store = new Vuex.Store({
       comments: null,
       attachments: [],
     },
+    changes: null,
   },
   getters: {
     getField,
@@ -25,6 +26,7 @@ const store = new Vuex.Store({
     USERS: (state) => state.users,
     STAGE: (state) => state.stage,
     REQUESTFORM: (state) => state.requestForm,
+    CHANGES: (state) => state.changes,
   },
   mutations: {
     updateField,
@@ -39,6 +41,9 @@ const store = new Vuex.Store({
     },
     SET_ERROR: (state, error) => {
       state.error = error;
+    },
+    SET_CHANGES: (state, changes) => {
+      state.changes = changes;
     },
   },
   actions: {
@@ -61,6 +66,7 @@ const store = new Vuex.Store({
           then((response) => {
             const changes = response.data;
             console.log(changes);
+            context.commit('SET_CHANGES', changes);
           });
       }
     }
