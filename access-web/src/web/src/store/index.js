@@ -68,7 +68,12 @@ const store = new Vuex.Store({
             context.commit('SET_CHANGES', changes);
           });
       }
-    }
+    },
+    SUBMIT_REQUEST: (context) => {
+      const users = context.state.users.filter(user => user.selected);
+      const request = Object.assign(context.state.requestForm, {users});
+      axios.post('/api/request', request);
+    },
   },
   modules: {
   },
