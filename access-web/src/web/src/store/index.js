@@ -65,7 +65,6 @@ const store = new Vuex.Store({
         axios.post('/api/users/changes', context.state.users.filter(user => user.selected)).
           then((response) => {
             const changes = response.data;
-            console.log(changes);
             context.commit('SET_CHANGES', changes);
           });
       }

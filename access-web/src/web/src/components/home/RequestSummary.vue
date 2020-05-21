@@ -12,10 +12,10 @@
     <v-skeleton-loader v-if="CHANGES===null" type="paragraph" />
     <div v-if="!hasChanges">No changes!</div>
     <div v-if="CHANGES && CHANGES.added">
-      <ChangeItem v-for="(added, index) in CHANGES.added" :key="index" :change="added" type="ADD" />
+      <ChangeItem v-for="(added, index) in CHANGES.added" :key="`add-${index}`" :change="added" type="ADD" />
     </div>
     <div v-if="CHANGES && CHANGES.removed">
-      <ChangeItem v-for="(removed, index) in CHANGES.removed" :key="index" :change="removed" type="REMOVE" />
+      <ChangeItem v-for="(removed, index) in CHANGES.removed" :key="`remove-${index}`" :change="removed" type="REMOVE" />
     </div>
 
     <h3 class="pt-10">Approvals</h3>
