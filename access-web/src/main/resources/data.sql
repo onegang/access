@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS USERS;
+ 
+CREATE TABLE USERS (
+  NAME VARCHAR(250)  PRIMARY KEY,
+  ACTIVE BOOLEAN NOT NULL
+);
+ 
+INSERT INTO USERS (NAME, ACTIVE) VALUES
+  ('Aliko', true),
+  ('Bill', true),
+  ('Folrunsho', false);

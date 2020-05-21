@@ -10,6 +10,8 @@ import org.onegang.access.dao.AccessDao;
 import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.User;
 import org.onegang.access.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +20,18 @@ import com.google.common.collect.Lists;
 @Service
 public class UsersService {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UsersService.class);
+	
 	@Autowired
 	private AccessDao accessDao;
+
 
 	public Collection<User> getUsers() {
 		return accessDao.getUsers();
 	}
 	
 	public AccessChange computeChanges(Collection<User> users) {
+		LOGGER.debug("Computing changes for users...");
 		Collection<User> originalUsers = accessDao.getUsers(
 				users.stream().map(user -> user.getName()).collect(Collectors.toList()));
 		
