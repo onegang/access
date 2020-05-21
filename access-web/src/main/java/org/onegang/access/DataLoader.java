@@ -39,7 +39,7 @@ public class DataLoader implements CommandLineRunner {
 	}
 	
 	private Collection<String> insertRoles() throws IOException {
-		Collection<String> userRoles = Lists.newArrayList("Administrator", "Analyst", "Researcher", "Developer", "Devops01", "Devops02", "Devops03");
+		Collection<String> userRoles = Lists.newArrayList("Administrator", "Analyst", "Researcher", "Developer", "Devops01", "Devops02", "Devops03", "Manager", "Chief Developer", "Snr Developer");
 		Collection<String> roles = Sets.newHashSet(userRoles);
 		roles.addAll(FileUtils.readLines(new File(
 				getClass().getClassLoader().getResource("mock/iam-roles.txt").getFile()), "utf-8"));
@@ -55,7 +55,7 @@ public class DataLoader implements CommandLineRunner {
 			int id = getID(user);
 			String name = user + ", " + id;
 			Collection<String> roles = getRoles(user, allRoles);
-			boolean active = id > 1000;
+			boolean active = id > 2300;
 			accessDao.insertUser(name, active, roles);
 		}
 	}

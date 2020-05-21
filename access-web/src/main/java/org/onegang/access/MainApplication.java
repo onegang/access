@@ -11,10 +11,6 @@ import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties
 @EnableEncryptableProperties
 public class MainApplication {
 	
-	static {
-		System.setProperty("jasypt.encryptor.password", "ENCRYPTOR");
-	}
-
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(MainApplication.class, args);
 	}

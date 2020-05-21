@@ -15,6 +15,6 @@ CREATE TABLE user_role (
   user VARCHAR(250)  NOT NULL,
   role VARCHAR(250)  NOT NULL,
   PRIMARY KEY(user, role),
-  FOREIGN KEY(user) REFERENCES lookup_user(name),
-  FOREIGN KEY(role) REFERENCES lookup_role(name)
+  FOREIGN KEY(user) REFERENCES lookup_user(name) ON DELETE CASCADE,
+  FOREIGN KEY(role) REFERENCES lookup_role(name) ON DELETE CASCADE
 );
