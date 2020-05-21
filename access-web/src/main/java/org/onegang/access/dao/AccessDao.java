@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.onegang.access.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Lists;
@@ -71,7 +72,13 @@ public class AccessDao {
 	
 	private List<String> roles;
 	
+	@Autowired
+	private UserMapper userMapper;
+	
 	public Collection<User> getUsers() {
+		if(true)
+			return userMapper.selectUsers();
+		
 		List<User> users = Lists.newArrayList();
 		for(String user: NAMES) {
 			int id = getID(user);

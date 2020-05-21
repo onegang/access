@@ -1,11 +1,13 @@
-DROP TABLE IF EXISTS USERS;
- 
-CREATE TABLE USERS (
-  NAME VARCHAR(250)  PRIMARY KEY,
-  ACTIVE BOOLEAN NOT NULL
-);
- 
-INSERT INTO USERS (NAME, ACTIVE) VALUES
+INSERT INTO lookup_user (name, active) VALUES
   ('Aliko', true),
   ('Bill', true),
   ('Folrunsho', false);
+  
+INSERT INTO lookup_role (name) VALUES
+  ('Administrator'),
+  ('Analyst');
+  
+INSERT INTO user_role (user, role) VALUES
+  ('Aliko', 'Administrator'),
+  ('Bill', 'Administrator'),
+  ('Bill', 'Analyst');
