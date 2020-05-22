@@ -5,7 +5,9 @@ import java.util.Date;
 
 public class Request {
 
-	private String id;
+	private int id;
+	
+	private Status status;
 	
 	private String requestor;
 	
@@ -19,18 +21,30 @@ public class Request {
 	
 	private Date submitDate;
 	
+	private Date lastModifiedDate;
+	
 	private Collection<String> supporters;
 	
 	private Collection<String> approvers;
 	
 	private Collection<User> users;
+	
+	private AccessChange changes;
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public String getRequestor() {
@@ -73,6 +87,14 @@ public class Request {
 		this.submitDate = submitDate;
 	}
 
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
 	public String getPurpose() {
 		return purpose;
 	}
@@ -103,6 +125,14 @@ public class Request {
 
 	public void setUsers(Collection<User> users) {
 		this.users = users;
+	}
+
+	public AccessChange getChanges() {
+		return changes;
+	}
+
+	public void setChanges(AccessChange changes) {
+		this.changes = changes;
 	}
 
 	@Override

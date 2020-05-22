@@ -13,25 +13,25 @@
       
     </template>
     <template v-slot:default="props">
-      <v-row>
-        <v-col
-          v-for="item in props.items"
-          :key="item.id"
-          cols="12">
-          <v-card ripple
-            class="app-table-card">
-            <v-card-title class="subtitle-1">
-              <v-icon class="pr-2" v-if="item.selected">mdi-checkbox-marked-outline</v-icon>
-              SR-{{item.id}}: {{ item.purpose }}
-            </v-card-title>
-            <v-divider></v-divider>
-
-            <div class="body-2">
-              <v-skeleton-loader type="list-item-two-line" />
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
+      <v-expansion-panels>
+        <v-expansion-panel v-for="item in props.items" :key="item.id">
+          <v-expansion-panel-header>
+            <v-row no-gutters>
+              <v-col cols="9">
+                <div class="ma-2"><span class="subtitle-2">SR-{{item.id}}</span><span>: {{ item.purpose }}</span></div>
+              </v-col>
+              <v-col cols="3">
+                <v-chip class="float-right ma-2" :color="getColor(item)" small>
+                {{item.status}}: {{dateFromNow(item.lastModifiedDate)}}
+              </v-chip>
+              </v-col>
+            </v-row>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-skeleton-loader type="list-item-two-line" />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </template>
 
     <template v-slot:footer>
@@ -71,6 +71,7 @@
 <script>
 
   import {mapGetters} from 'vuex';
+  import moment from 'moment';
 
   export default {
     data() {
@@ -91,6 +92,15 @@
       },
       formerPage() {
         if (this.page - 1 >= 1) this.page -= 1;
+      },
+      dateFromNow(date) {
+        return moment(date).fromNow();
+      },
+      getColor(request) {
+        if(request.status==="DONE")
+          return "success";
+        else
+          return "info"
       },
     },
   };

@@ -4,8 +4,7 @@
     :items-per-page.sync="itemsPerPage"
     :page="page"
     :search="search"
-    :sort-by="sortBy.toLowerCase()"
-    :sort-desc="sortDesc"
+    sort-by="name"
     :custom-filter="filterUsers"
     hide-default-footer
     loading
@@ -35,9 +34,9 @@
           cols="12" sm="6" md="4" lg="3">
           <v-card ripple @click="item.selected = !item.selected"
             class="app-table-card"
-            v-bind:class="{'text--disabled': !item.active}">
+            :class="{'text--disabled': !item.active}">
             <v-card-title class="subtitle-1" 
-              v-bind:class="{'font-weight-bold': item.active}">
+              :class="{'font-weight-bold': item.active}">
               <v-icon class="pr-2" v-if="item.selected">mdi-checkbox-marked-outline</v-icon>
               {{ item.name }}
             </v-card-title>
@@ -120,16 +119,8 @@
         itemsPerPageArray: [8, 16, 32],
         search: '',
         filter: {},
-        sortDesc: false,
         page: 1,
         itemsPerPage: 8,
-        sortBy: 'name',
-        keys: [
-          'Name',
-          'Roles',
-          'Active',
-        ],
-        items: [],
       };
     },
     computed: {

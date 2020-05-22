@@ -3,7 +3,9 @@ package org.onegang.access.service;
 import java.util.Collection;
 
 import org.onegang.access.dao.AccessDao;
+import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.Request;
+import org.onegang.access.entity.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,13 @@ public class RequestService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestService.class);
 	
-	private static final String MOCK_USER = "Alden Page";
+	private static final String MOCK_USER = "Alden Page, 10078";
 	
 	@Autowired
 	private AccessDao accessDao;
+	
+	@Autowired
+	private UsersService userService;
 	
 
 	public Collection<Request> getRequests() {
@@ -26,8 +31,12 @@ public class RequestService {
 
 	public Request submitRequest(Request request) {
 		LOGGER.info("Submitting request: {}", request.toString());
+		AccessChange changes = userService.computeChanges(request.getUsers());
+		
+		request.setStatus(Status.APPROVING);
 		request.setRequestor(MOCK_USER); //TODO replace when auth is in place
-		accessDao.addRequest(request);
+		request.setChanges(changes);
+		request = accessDao.addRequest(request);
 		return request;
 	}
 

@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS request_useraccess;
+DROP TABLE IF EXISTS request_user;
 DROP TABLE IF EXISTS request_change;
 DROP TABLE IF EXISTS request;
 DROP TABLE IF EXISTS user_role;
@@ -23,14 +23,16 @@ CREATE TABLE user_role (
 
 CREATE TABLE request (
   id   			IDENTITY  	PRIMARY KEY,
+  status		VARCHAR(50)	NOT NULL,
   requestor		VARCHAR(250)	NOT NULL,
   effectiveDate	DATE			NOT NULL,
   expiryDate	DATE			,
   submitDate	TIMESTAMP		NOT NULL,
+  lastModifiedDate	TIMESTAMP	NOT NULL,
   purpose		CLOB			NOT NULL,
   comments		CLOB
 );
-CREATE TABLE request_useraccess (
+CREATE TABLE request_user (
   requestId   	INT,
   user			VARCHAR(250),
   role 			VARCHAR(250),
