@@ -2,8 +2,10 @@
   <v-container>
     <h3 class="pt-3">Request Summary</h3>
     <v-divider />
+    <div>Purpose: {{REQUESTFORM.purpose}}</div>
     <div>Effective Date: {{REQUESTFORM.effectiveDate}}</div>
     <div v-if="REQUESTFORM.expiryDate">Expiry Date: {{REQUESTFORM.expiryDate}}</div>
+    <div v-if="REQUESTFORM.supporters.length>0">Supporters: {{REQUESTFORM.supporters.join(", ")}}</div>
     <div v-if="REQUESTFORM.comments">Comments: {{REQUESTFORM.comments}}</div>
     <div v-if="REQUESTFORM.attachments.length>0">Supporting Documents: {{REQUESTFORM.attachments.map(file => file.name).join(", ")}}</div>
 
@@ -20,7 +22,8 @@
 
     <h3 class="pt-10">Approvals</h3>
     <v-divider class="pb-3" />
-    <v-skeleton-loader type="list-item-avatar-two-line" />
+    <div v-if="REQUESTFORM.approvers.length>0">Approvers: {{REQUESTFORM.approvers.join(", ")}}</div>
+    <v-skeleton-loader v-if="REQUESTFORM.approvers.length===0" type="list-item-avatar-two-line" />
 
     <h3 class="pt-10">Effective User Access</h3>
     <v-divider class="pb-3" />

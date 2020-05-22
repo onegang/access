@@ -108,8 +108,7 @@ export default {
       this.clearForm();
     },
     clearForm() {
-      this.$store.dispatch('GET_USERS');
-      this.$store.dispatch('SET_STAGE', 0);
+      this.$store.dispatch('RESET');
     }
   },
 };

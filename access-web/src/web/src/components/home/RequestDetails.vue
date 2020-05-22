@@ -1,6 +1,15 @@
 <template>
   <v-form v-model="valid">
     <v-container>
+      <v-row>
+        <v-col cols="12" md="12">
+          <v-text-field
+            v-model="purpose"
+            label="Purpose"
+            clearable
+          ></v-text-field>
+        </v-col>
+      </v-row>
       <v-row> 
         <v-col cols="12" sm="6" md="4">
           <v-menu
@@ -45,6 +54,35 @@
             </template>
             <v-date-picker v-model="expiryDate" @input="expiryDateMenu = false"></v-date-picker>
           </v-menu>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6" md="4">
+          <v-autocomplete
+            v-model="supporters"
+            :items="USERS"
+            item-text="name"
+            item-value="name"
+            chips
+            clearable
+            label="Supported by"
+            prepend-icon="mdi-account"
+            multiple deletable-chips
+          ></v-autocomplete>
+        </v-col>
+        <v-col cols="6" md="4">
+          <v-autocomplete
+            v-model="approvers"
+            :items="USERS"
+            item-text="name"
+            item-value="name"
+            chips
+            clearable
+            label="Approved by (Optional)"
+            hint="Used to replace default approvers"
+            prepend-icon="mdi-account"
+            multiple deletable-chips
+          ></v-autocomplete>
         </v-col>
       </v-row>
       <v-row>
@@ -103,6 +141,9 @@ export default {
       'requestForm.effectiveDate',
       'requestForm.expiryDate',
       'requestForm.comments',
+      'requestForm.purpose',
+      'requestForm.supporters',
+      'requestForm.approvers',
       'requestForm.attachments',
     ]),
   },

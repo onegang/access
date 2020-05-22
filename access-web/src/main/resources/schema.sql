@@ -22,7 +22,7 @@ CREATE TABLE user_role (
 );
 
 CREATE TABLE request (
-  id   			VARCHAR(250)  	PRIMARY KEY,
+  id   			IDENTITY  	PRIMARY KEY,
   requestor		VARCHAR(250)	NOT NULL,
   effectiveDate	DATE			NOT NULL,
   expiryDate	DATE			,
@@ -30,7 +30,7 @@ CREATE TABLE request (
   comments		CLOB
 );
 CREATE TABLE request_useraccess (
-  requestId   	VARCHAR(250),
+  requestId   	INT,
   user			VARCHAR(250),
   role 			VARCHAR(250),
   PRIMARY KEY(requestId, user, role),
@@ -39,7 +39,7 @@ CREATE TABLE request_useraccess (
   FOREIGN KEY(requestId) REFERENCES request(id) ON DELETE CASCADE
 );
 CREATE TABLE request_change (
-  requestId   	VARCHAR(250),
+  requestId   	INT,
   type			VARCHAR(50),
   user			VARCHAR(250),
   role 			VARCHAR(250),

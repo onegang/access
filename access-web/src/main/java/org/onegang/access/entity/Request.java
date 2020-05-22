@@ -9,6 +9,8 @@ public class Request {
 	
 	private String requestor;
 	
+	private String purpose;
+	
 	private String comments;
 	
 	private Date effectiveDate;
@@ -16,6 +18,10 @@ public class Request {
 	private Date expiryDate;
 	
 	private Date submitDate;
+	
+	private Collection<String> supporters;
+	
+	private Collection<String> approvers;
 	
 	private Collection<User> users;
 
@@ -67,6 +73,30 @@ public class Request {
 		this.submitDate = submitDate;
 	}
 
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public Collection<String> getSupporters() {
+		return supporters;
+	}
+
+	public void setSupporters(Collection<String> supporters) {
+		this.supporters = supporters;
+	}
+
+	public Collection<String> getApprovers() {
+		return approvers;
+	}
+
+	public void setApprovers(Collection<String> approvers) {
+		this.approvers = approvers;
+	}
+
 	public Collection<User> getUsers() {
 		return users;
 	}
@@ -77,9 +107,9 @@ public class Request {
 
 	@Override
 	public String toString() {
-		return "Request [id=" + id + ", requestor=" + requestor + ", comments=" + comments + ", effectiveDate="
-				+ effectiveDate + ", expiryDate=" + expiryDate + ", submitDate=" + submitDate + ", users=" + users
-				+ "]";
+		return "Request [id=" + id + ", requestor=" + requestor + ", purpose=" + purpose + ", comments=" + comments
+				+ ", effectiveDate=" + effectiveDate + ", expiryDate=" + expiryDate + ", submitDate=" + submitDate
+				+ ", supporters=" + supporters + ", approvers=" + approvers + ", users=" + users + "]";
 	}
 	
 }

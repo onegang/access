@@ -5,18 +5,24 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 
+const defaultForm = {
+      effectiveDate: new Date().toISOString().substr(0, 10),
+      expiryDate: null,
+      purpose: null,
+      comments: null,
+      manual: null,
+      supporters: [],
+      approvers: [],
+      attachments: [],
+    };
+
 const store = new Vuex.Store({
   state: {
     roles: [],
     users: [],
     stage: 0,
     error: null,
-    requestForm: {
-      effectiveDate: new Date().toISOString().substr(0, 10),
-      expiryDate: null,
-      comments: null,
-      attachments: [],
-    },
+    requestForm: Object.assign({}, defaultForm),
     changes: null,
   },
   getters: {
@@ -44,6 +50,11 @@ const store = new Vuex.Store({
     },
     SET_CHANGES: (state, changes) => {
       state.changes = changes;
+    },
+    RESET_FORM: (state) => {
+      for(const p in defaultForm) {
+        state.requestForm[p] = defaultForm[p];
+      }
     },
   },
   actions: {
@@ -74,6 +85,11 @@ const store = new Vuex.Store({
       const request = Object.assign(context.state.requestForm, {users});
       axios.post('/api/request', request);
     },
+    RESET: (context) => {
+      context.dispatch('GET_USERS');
+      context.dispatch('SET_STAGE', 0);
+      context.commit('RESET_FORM', defaultForm);
+    }
   },
   modules: {
   },
