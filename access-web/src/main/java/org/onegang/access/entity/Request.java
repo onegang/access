@@ -15,6 +15,8 @@ public class Request {
 	
 	private String comments;
 	
+	private String manual;
+	
 	private Date effectiveDate;
 	
 	private Date expiryDate;
@@ -61,6 +63,14 @@ public class Request {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getManual() {
+		return manual;
+	}
+
+	public void setManual(String manual) {
+		this.manual = manual;
 	}
 
 	public Date getEffectiveDate() {

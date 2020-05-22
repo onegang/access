@@ -15,7 +15,7 @@ public interface RequestMapper {
 	
 	@Select("SELECT r.id as id, r.status as status, r.requestor as requestor, r.purpose as purpose, "
 			+ "r.comments as comments, r.effectiveDate as effectiveDate, r.expiryDate as expiryDate, "
-			+ "r.submitDate as submitDate, r.lastModifiedDate as lastModifiedDate, "
+			+ "r.submitDate as submitDate, r.lastModifiedDate as lastModifiedDate, r.manual as manual, "
 			+ "s.user as s_name, s.status as s_status, "
 			+ "a.user as a_name, a.status as a_status "
 			+ "FROM request r "
@@ -26,9 +26,9 @@ public interface RequestMapper {
 	Collection<Request> selectRequests(String submitter);
 	
 	@Insert("INSERT INTO request(requestor, status, effectiveDate, expiryDate, submitDate, "
-			+ "lastModifiedDate, purpose, comments) VALUES("
+			+ "lastModifiedDate, purpose, comments, manual) VALUES("
 			+ "#{requestor}, #{status}, #{effectiveDate}, #{expiryDate}, CURRENT_TIMESTAMP(), "
-			+ "CURRENT_TIMESTAMP(), #{purpose}, #{comments})")
+			+ "CURRENT_TIMESTAMP(), #{purpose}, #{comments}, #{manual})")
 	@Options(useGeneratedKeys=true, keyProperty="id")
 	void insertRequest(Request request);
 	

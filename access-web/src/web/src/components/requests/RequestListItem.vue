@@ -22,6 +22,8 @@
       {{user.name}}: {{user.status}}
     </v-chip>
   </div>
+
+  <div v-if="request.manual" class="pa-3">{{request.manual}}</div>
 </div>
 </template>
 

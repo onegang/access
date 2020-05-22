@@ -100,6 +100,18 @@ public class DataLoader implements CommandLineRunner {
 		request.setChanges(usersService.computeChanges(request.getUsers()));
 		accessDao.addRequest(request);
 		
+		Request request3  = new Request();
+		request3.setStatus(Status.REJECTED);
+		request3.setPurpose("Grant Devops02 to Adolfo Brewer");
+		request3.setEffectiveDate(new Date());
+		request3.setRequestor(MOCK_USER);
+		request3.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
+		request3.setApprovers(toApprovalUser("Carla Kane, 14760", Status.REJECTED));
+		request3.setUsers(Lists.newArrayList(
+			new User("Adolfo Brewer, 16202", Lists.newArrayList("Devops02"), true)));
+		request3.setChanges(usersService.computeChanges(request3.getUsers()));
+		accessDao.addRequest(request3);
+		
 		Request request2  = new Request();
 		request2.setStatus(Status.APPROVING);
 		request2.setPurpose("Revoke Manager from Cade Haley due to transfer");
@@ -112,17 +124,17 @@ public class DataLoader implements CommandLineRunner {
 		request2.setChanges(usersService.computeChanges(request2.getUsers()));
 		accessDao.addRequest(request2);
 		
-		Request request3  = new Request();
-		request3.setStatus(Status.REJECTED);
-		request3.setPurpose("Grant Devops02 to Adolfo Brewer");
-		request3.setEffectiveDate(new Date());
-		request3.setRequestor(MOCK_USER);
-		request3.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
-		request3.setApprovers(toApprovalUser("Carla Kane, 14760", Status.REJECTED));
-		request3.setUsers(Lists.newArrayList(
-			new User("Adolfo Brewer, 16202", Lists.newArrayList("Devops02"), true)));
-		request3.setChanges(usersService.computeChanges(request3.getUsers()));
-		accessDao.addRequest(request3);
+		Request request4  = new Request();
+		request4.setStatus(Status.APPROVING);
+		request4.setPurpose("Grant Auditor to Ahmed Humphrey");
+		request4.setManual("Please grant Auditor rights to him.");
+		request4.setEffectiveDate(new Date());
+		request4.setRequestor(MOCK_USER);
+		request4.setSupporters(toApprovalUser("Bianca Key, 18691", Status.PENDING));
+		request4.setUsers(Lists.newArrayList(
+			new User("Ahmed Humphrey, 15697", Lists.newArrayList("Devops01", "Administrator"), true)));
+		request4.setChanges(usersService.computeChanges(request4.getUsers()));
+		accessDao.addRequest(request4);
 	}
 	
 	private Collection<ApprovalUser> toApprovalUser(String name, Status status) {

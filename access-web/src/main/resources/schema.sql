@@ -32,7 +32,8 @@ CREATE TABLE request (
   submitDate	TIMESTAMP		NOT NULL,
   lastModifiedDate	TIMESTAMP	NOT NULL,
   purpose		CLOB			NOT NULL,
-  comments		CLOB
+  comments		CLOB,
+  manual		CLOB
 );
 CREATE TABLE request_user (
   requestId   	INT,

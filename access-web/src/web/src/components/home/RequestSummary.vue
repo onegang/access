@@ -13,6 +13,7 @@
     <v-divider class="pb-3" />
     <v-skeleton-loader v-if="CHANGES===null" type="paragraph" />
     <div v-if="!hasChanges">No changes!</div>
+    <div v-if="REQUESTFORM.manual">{{REQUESTFORM.manual}}</div>
     <div v-if="CHANGES && CHANGES.added">
       <ChangeItem v-for="(added, index) in CHANGES.added" :key="`add-${index}`" :change="added" type="ADD" />
     </div>
@@ -50,7 +51,7 @@ export default {
     hasChanges() {
       if(this.CHANGES===null)
         return false;
-      return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0;
+      return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0 || this.REQUESTFORM.manual;
     },
     ...mapGetters(['REQUESTFORM', 'USERS', 'CHANGES']),
   },

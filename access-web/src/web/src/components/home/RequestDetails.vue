@@ -97,6 +97,18 @@
             v-model="comments"
             label="Comments (Optional)"
             clearable
+            rows="3"
+          ></v-textarea>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="12">
+          <v-textarea
+            v-model="manual"
+            label="Manual Access Changes (Optional)"
+            hint="When you need assistance or when required role(s) is not listed"
+            clearable
+            rows="3"
           ></v-textarea>
         </v-col>
       </v-row>
@@ -141,6 +153,7 @@ export default {
       'requestForm.effectiveDate',
       'requestForm.expiryDate',
       'requestForm.comments',
+      'requestForm.manual',
       'requestForm.purpose',
       'requestForm.supporters',
       'requestForm.approvers',
