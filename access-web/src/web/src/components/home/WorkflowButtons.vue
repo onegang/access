@@ -69,7 +69,7 @@ export default {
     hasChanges() {
       if(this.CHANGES===null)
         return false;
-      return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0;
+      return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0 || this.REQUESTFORM.manual;
     },
     instructions() {
       if(this.STAGE===0) {
@@ -85,7 +85,7 @@ export default {
         return "";
       }
     },
-    ...mapGetters(['STAGE', 'USERS', 'CHANGES']),
+    ...mapGetters(['STAGE', 'USERS', 'CHANGES', 'REQUESTFORM']),
   },
   methods: {
     toAccessForm() {
@@ -104,11 +104,10 @@ export default {
     },
     submitForm() {
       this.showSubmitted = true;
-      this.clearForm();
+      this.$store.dispatch('SUBMIT_REQUEST');
     },
     clearForm() {
-      this.$store.dispatch('GET_USERS');
-      this.$store.dispatch('SET_STAGE', 0);
+      this.$store.dispatch('RESET');
     }
   },
 };

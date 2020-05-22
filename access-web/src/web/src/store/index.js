@@ -5,19 +5,26 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 
+const defaultForm = {
+      effectiveDate: new Date().toISOString().substr(0, 10),
+      expiryDate: null,
+      purpose: null,
+      comments: null,
+      manual: null,
+      supporters: [],
+      approvers: [],
+      attachments: [],
+    };
+
 const store = new Vuex.Store({
   state: {
     roles: [],
     users: [],
     stage: 0,
     error: null,
-    requestForm: {
-      effectiveDate: new Date().toISOString().substr(0, 10),
-      expiryDate: null,
-      comments: null,
-      attachments: [],
-    },
+    requestForm: Object.assign({}, defaultForm),
     changes: null,
+    requests: null,
   },
   getters: {
     getField,
@@ -27,6 +34,7 @@ const store = new Vuex.Store({
     STAGE: (state) => state.stage,
     REQUESTFORM: (state) => state.requestForm,
     CHANGES: (state) => state.changes,
+    REQUESTS: (state) => state.requests,
   },
   mutations: {
     updateField,
@@ -45,11 +53,16 @@ const store = new Vuex.Store({
     SET_CHANGES: (state, changes) => {
       state.changes = changes;
     },
+    SET_REQUESTS: (state, requests) => {
+      state.requests = requests;
+    },
+    RESET_FORM: (state) => {
+      for(const p in defaultForm) {
+        state.requestForm[p] = defaultForm[p];
+      }
+    },
   },
   actions: {
-    CLEAR_ERROR: (context) => {
-      context.commit('SET_ERROR', null);
-    },
     GET_ROLES: async (context) => {
       const { data } = await axios.get('/api/lookup/roles');
       context.commit('SET_ROLES', data);
@@ -57,6 +70,13 @@ const store = new Vuex.Store({
     GET_USERS: async (context) => {
       const { data } = await axios.get('/api/users');
       context.commit('SET_USERS', data);
+    },
+    GET_REQUESTS: async (context) => {
+      const { data } = await axios.get('/api/request');
+      context.commit('SET_REQUESTS', data);
+    },
+    CLEAR_ERROR: (context) => {
+      context.commit('SET_ERROR', null);
     },
     SET_STAGE: (context, stage) => {
       context.commit('SET_STAGE', stage);
@@ -68,6 +88,20 @@ const store = new Vuex.Store({
             context.commit('SET_CHANGES', changes);
           });
       }
+    },
+    SUBMIT_REQUEST: (context) => {
+      const users = context.state.users.filter(user => user.selected);
+      const request = Object.assign({}, context.state.requestForm, {users});
+      request.supporters = request.supporters.map(name => {return {name}});
+      request.approvers = request.approvers.map(name => {return {name}});
+      axios.post('/api/request', request).then(() => {
+        context.dispatch('RESET');
+      });
+    },
+    RESET: (context) => {
+      context.dispatch('GET_USERS');
+      context.dispatch('SET_STAGE', 0);
+      context.commit('RESET_FORM', defaultForm);
     }
   },
   modules: {

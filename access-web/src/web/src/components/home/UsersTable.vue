@@ -4,8 +4,7 @@
     :items-per-page.sync="itemsPerPage"
     :page="page"
     :search="search"
-    :sort-by="sortBy.toLowerCase()"
-    :sort-desc="sortDesc"
+    sort-by="name"
     :custom-filter="filterUsers"
     hide-default-footer
     loading
@@ -35,16 +34,16 @@
           cols="12" sm="6" md="4" lg="3">
           <v-card ripple @click="item.selected = !item.selected"
             class="app-table-card"
-            v-bind:class="{'text--disabled': !item.active}">
-            <v-card-title class="subheading" 
-              v-bind:class="{'font-weight-bold': item.active}">
+            :class="{'text--disabled': !item.active}">
+            <v-card-title class="subtitle-1" 
+              :class="{'font-weight-bold': item.active}">
               <v-icon class="pr-2" v-if="item.selected">mdi-checkbox-marked-outline</v-icon>
               {{ item.name }}
-              <div v-if="!item.active">(Deactivated)</div>
             </v-card-title>
+            <div class="pl-4 mt-n5 caption" v-if="!item.active">(Deactivated)</div>
             <v-divider></v-divider>
 
-            <div class="app-table-role  px-5">
+            <div class="body-2 app-table-role px-5">
               {{ prettifyRoles(item.roles) }}
             </div>
           </v-card>
@@ -120,16 +119,8 @@
         itemsPerPageArray: [8, 16, 32],
         search: '',
         filter: {},
-        sortDesc: false,
         page: 1,
         itemsPerPage: 8,
-        sortBy: 'name',
-        keys: [
-          'Name',
-          'Roles',
-          'Active',
-        ],
-        items: [],
       };
     },
     computed: {
@@ -140,7 +131,7 @@
     },
     methods: {
       prettifyRoles(roles) {
-        const MAX = 4;
+        const MAX = 5;
         if(roles.length > MAX) {
           const subset = roles.slice(0, MAX);
           subset.push("...");

@@ -1,6 +1,15 @@
 <template>
   <v-form v-model="valid">
     <v-container>
+      <v-row>
+        <v-col cols="12" md="12">
+          <v-text-field
+            v-model="purpose"
+            label="Purpose"
+            clearable
+          ></v-text-field>
+        </v-col>
+      </v-row>
       <v-row> 
         <v-col cols="12" sm="6" md="4">
           <v-menu
@@ -49,6 +58,35 @@
       </v-row>
       <v-row>
         <v-col cols="6" md="4">
+          <v-autocomplete
+            v-model="supporters"
+            :items="USERS"
+            item-text="name"
+            item-value="name"
+            chips
+            clearable
+            label="Supported by"
+            prepend-icon="mdi-account"
+            multiple deletable-chips
+          ></v-autocomplete>
+        </v-col>
+        <v-col cols="6" md="4">
+          <v-autocomplete
+            v-model="approvers"
+            :items="USERS"
+            item-text="name"
+            item-value="name"
+            chips
+            clearable
+            label="Approved by (Optional)"
+            hint="Used to replace default approvers"
+            prepend-icon="mdi-account"
+            multiple deletable-chips
+          ></v-autocomplete>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6" md="4">
           <v-file-input multiple chips show-size counter v-model="attachments"
             label="Supporting documents (Optional)"></v-file-input>
         </v-col>
@@ -59,6 +97,18 @@
             v-model="comments"
             label="Comments (Optional)"
             clearable
+            rows="3"
+          ></v-textarea>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="12">
+          <v-textarea
+            v-model="manual"
+            label="Manual Access Changes (Optional)"
+            hint="When you need assistance or when required role(s) is not listed"
+            clearable
+            rows="3"
           ></v-textarea>
         </v-col>
       </v-row>
@@ -103,6 +153,10 @@ export default {
       'requestForm.effectiveDate',
       'requestForm.expiryDate',
       'requestForm.comments',
+      'requestForm.manual',
+      'requestForm.purpose',
+      'requestForm.supporters',
+      'requestForm.approvers',
       'requestForm.attachments',
     ]),
   },

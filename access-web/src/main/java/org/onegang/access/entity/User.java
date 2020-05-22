@@ -55,5 +55,10 @@ public class User {
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
+
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", roles=" + roles + "]";
+	}
 	
 }

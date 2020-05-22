@@ -3,10 +3,16 @@ package org.onegang.access;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.onegang.access.dao.AccessDao;
+import org.onegang.access.entity.ApprovalUser;
+import org.onegang.access.entity.Request;
+import org.onegang.access.entity.Status;
+import org.onegang.access.entity.User;
+import org.onegang.access.service.UsersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +29,13 @@ public class DataLoader implements CommandLineRunner {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
 	
+	private static final String MOCK_USER = "Alden Page, 10078";
+	
 	@Autowired
 	private AccessDao accessDao;
+	
+	@Autowired
+	private UsersService usersService;
 
 	@Override
 	public void run(String... args) {
@@ -32,14 +43,15 @@ public class DataLoader implements CommandLineRunner {
 		try {
 			List<String> userRoles = Lists.newArrayList(insertRoles());
 			insertUsers(userRoles);
+			insertRequests();
 		} catch(Exception ex) {
 			LOGGER.error("Unable to load the mockup data fully", ex);
 		}
 		LOGGER.info("Loaded!");
 	}
-	
+
 	private Collection<String> insertRoles() throws IOException {
-		Collection<String> userRoles = Lists.newArrayList("Administrator", "Analyst", "Researcher", "Developer", "Devops01", "Devops02", "Devops03");
+		Collection<String> userRoles = Lists.newArrayList("Administrator", "Analyst", "Researcher", "Developer", "Devops01", "Devops02", "Devops03", "Manager", "Chief Developer", "Snr Developer");
 		Collection<String> roles = Sets.newHashSet(userRoles);
 		roles.addAll(FileUtils.readLines(new File(
 				getClass().getClassLoader().getResource("mock/iam-roles.txt").getFile()), "utf-8"));
@@ -55,7 +67,7 @@ public class DataLoader implements CommandLineRunner {
 			int id = getID(user);
 			String name = user + ", " + id;
 			Collection<String> roles = getRoles(user, allRoles);
-			boolean active = id > 1000;
+			boolean active = id > 2300;
 			accessDao.insertUser(name, active, roles);
 		}
 	}
@@ -73,6 +85,63 @@ public class DataLoader implements CommandLineRunner {
 			}
 		}
 		return roles;
+	}
+	
+	private void insertRequests() {
+		Request request  = new Request();
+		request.setStatus(Status.DONE);
+		request.setPurpose("Grant ECS to developer");
+		request.setEffectiveDate(new Date());
+		request.setRequestor(MOCK_USER);
+		request.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
+		request.setUsers(Lists.newArrayList(
+			new User("Amiah Bridges, 4586", Lists.newArrayList("Developer", "Administrator", "AmazonECS_FullAccess"), true),
+			new User("Nathalie Patterson, 11639", Lists.newArrayList("Developer", "Administrator", "Devops03", "AmazonECS_FullAccess"), true)));
+		request.setChanges(usersService.computeChanges(request.getUsers()));
+		accessDao.addRequest(request);
+		
+		Request request3  = new Request();
+		request3.setStatus(Status.REJECTED);
+		request3.setPurpose("Grant Devops02 to Adolfo Brewer");
+		request3.setEffectiveDate(new Date());
+		request3.setRequestor(MOCK_USER);
+		request3.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
+		request3.setApprovers(toApprovalUser("Carla Kane, 14760", Status.REJECTED));
+		request3.setUsers(Lists.newArrayList(
+			new User("Adolfo Brewer, 16202", Lists.newArrayList("Devops02"), true)));
+		request3.setChanges(usersService.computeChanges(request3.getUsers()));
+		accessDao.addRequest(request3);
+		
+		Request request2  = new Request();
+		request2.setStatus(Status.APPROVING);
+		request2.setPurpose("Revoke Manager from Cade Haley due to transfer");
+		request2.setEffectiveDate(new Date());
+		request2.setRequestor(MOCK_USER);
+		request2.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
+		request2.setApprovers(toApprovalUser("Carla Kane, 14760", Status.PENDING));
+		request2.setUsers(Lists.newArrayList(
+			new User("Cade Haley, 8943", Lists.newArrayList("Researcher"), true)));
+		request2.setChanges(usersService.computeChanges(request2.getUsers()));
+		accessDao.addRequest(request2);
+		
+		Request request4  = new Request();
+		request4.setStatus(Status.APPROVING);
+		request4.setPurpose("Grant Auditor to Ahmed Humphrey");
+		request4.setManual("Please grant Auditor rights to him.");
+		request4.setEffectiveDate(new Date());
+		request4.setRequestor(MOCK_USER);
+		request4.setSupporters(toApprovalUser("Bianca Key, 18691", Status.PENDING));
+		request4.setUsers(Lists.newArrayList(
+			new User("Ahmed Humphrey, 15697", Lists.newArrayList("Devops01", "Administrator"), true)));
+		request4.setChanges(usersService.computeChanges(request4.getUsers()));
+		accessDao.addRequest(request4);
+	}
+	
+	private Collection<ApprovalUser> toApprovalUser(String name, Status status) {
+		ApprovalUser user = new ApprovalUser();
+		user.setName(name);
+		user.setStatus(status);
+		return Lists.newArrayList(user);
 	}
 
 }
