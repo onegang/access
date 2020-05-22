@@ -13,7 +13,7 @@
       
     </template>
     <template v-slot:default="props">
-      <v-expansion-panels>
+      <v-expansion-panels multiple>
         <v-expansion-panel v-for="item in props.items" :key="item.id">
           <v-expansion-panel-header>
             <v-row no-gutters>
@@ -21,14 +21,16 @@
                 <div class="ma-2"><span class="subtitle-2">SR-{{item.id}}</span><span>: {{ item.purpose }}</span></div>
               </v-col>
               <v-col cols="3">
-                <v-chip class="float-right ma-2" :color="getColor(item)" small>
+                <v-chip class="float-right ma-2" small
+                  :outlined="isPending(item)"
+                  :color="getColor(item)">
                 {{item.status}}: {{dateFromNow(item.lastModifiedDate)}}
               </v-chip>
               </v-col>
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-skeleton-loader type="list-item-two-line" />
+            <RequestListItem :request="item" />
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -72,8 +74,12 @@
 
   import {mapGetters} from 'vuex';
   import moment from 'moment';
+  import RequestListItem from './RequestListItem.vue'
 
   export default {
+    components: {
+      RequestListItem,
+    },
     data() {
       return {
         page: 1,
@@ -96,11 +102,16 @@
       dateFromNow(date) {
         return moment(date).fromNow();
       },
+      isPending(request) {
+        return request.status==="APPROVING" || request.status==="IMPLEMENTING";
+      },
       getColor(request) {
-        if(request.status==="DONE")
-          return "success";
+        if(request.status==="CANCELLED" || request.status==="REJECTED")
+          return "deep-orange darken-3 white--text";
+        else if(request.status==="DONE")
+          return "info";
         else
-          return "info"
+          return "";
       },
     },
   };

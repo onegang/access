@@ -5,14 +5,24 @@ import java.util.Collection;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 
 @Mapper
 public interface RequestMapper {
-
-	@Select("SELECT * FROM request WHERE requestor=#{submitter}")
+	
+	@Select("SELECT r.id as id, r.status as status, r.requestor as requestor, r.purpose as purpose, "
+			+ "r.comments as comments, r.effectiveDate as effectiveDate, r.expiryDate as expiryDate, "
+			+ "r.submitDate as submitDate, r.lastModifiedDate as lastModifiedDate, "
+			+ "s.user as s_name, s.status as s_status, "
+			+ "a.user as a_name, a.status as a_status "
+			+ "FROM request r "
+			+ "LEFT OUTER JOIN request_supporter s on s.requestId=r.id "
+			+ "LEFT OUTER JOIN request_approver a on a.requestId=r.id "
+			+ "WHERE r.requestor=#{submitter}")
+	@ResultMap("RequestMap")
 	Collection<Request> selectRequests(String submitter);
 	
 	@Insert("INSERT INTO request(requestor, status, effectiveDate, expiryDate, submitDate, "

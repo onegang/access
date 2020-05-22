@@ -28,7 +28,7 @@
     <h3 class="pt-10">Effective User Access</h3>
     <v-divider class="pb-3" />
     <div v-for="user of selectedUsers" v-bind:key="user.name">
-        <UserDetails v-bind:user="user" readonly />
+        <UserDetails :user="user" readonly />
     </div>
   </v-container>
 </template>

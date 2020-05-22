@@ -56,12 +56,14 @@ public class AccessDao {
 		}
 		if(request.getSupporters()!=null) {
 			for(ApprovalUser user: request.getSupporters()) {
-				requestMapper.insertRequestSupporter(request.getId(), user.getName(), Status.PENDING);
+				Status status = user.getStatus()==null ? Status.PENDING: user.getStatus();
+				requestMapper.insertRequestSupporter(request.getId(), user.getName(), status);
 			}
 		}
 		if(request.getApprovers()!=null) {
 			for(ApprovalUser user: request.getApprovers()) {
-				requestMapper.insertRequestApprover(request.getId(), user.getName(), Status.PENDING);
+				Status status = user.getStatus()==null ? Status.PENDING: user.getStatus();
+				requestMapper.insertRequestApprover(request.getId(), user.getName(), status);
 			}
 		}
 		if(request.getChanges().getAdded()!=null) {
