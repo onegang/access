@@ -27,6 +27,7 @@ CREATE TABLE request (
   effectiveDate	DATE			NOT NULL,
   expiryDate	DATE			,
   submitDate	TIMESTAMP		NOT NULL,
+  purpose		CLOB			NOT NULL,
   comments		CLOB
 );
 CREATE TABLE request_useraccess (

@@ -24,6 +24,7 @@ const store = new Vuex.Store({
     error: null,
     requestForm: Object.assign({}, defaultForm),
     changes: null,
+    requests: null,
   },
   getters: {
     getField,
@@ -33,6 +34,7 @@ const store = new Vuex.Store({
     STAGE: (state) => state.stage,
     REQUESTFORM: (state) => state.requestForm,
     CHANGES: (state) => state.changes,
+    REQUESTS: (state) => state.requests,
   },
   mutations: {
     updateField,
@@ -51,6 +53,9 @@ const store = new Vuex.Store({
     SET_CHANGES: (state, changes) => {
       state.changes = changes;
     },
+    SET_REQUESTS: (state, requests) => {
+      state.requests = requests;
+    },
     RESET_FORM: (state) => {
       for(const p in defaultForm) {
         state.requestForm[p] = defaultForm[p];
@@ -58,9 +63,6 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    CLEAR_ERROR: (context) => {
-      context.commit('SET_ERROR', null);
-    },
     GET_ROLES: async (context) => {
       const { data } = await axios.get('/api/lookup/roles');
       context.commit('SET_ROLES', data);
@@ -68,6 +70,13 @@ const store = new Vuex.Store({
     GET_USERS: async (context) => {
       const { data } = await axios.get('/api/users');
       context.commit('SET_USERS', data);
+    },
+    GET_REQUESTS: async (context) => {
+      const { data } = await axios.get('/api/request');
+      context.commit('SET_REQUESTS', data);
+    },
+    CLEAR_ERROR: (context) => {
+      context.commit('SET_ERROR', null);
     },
     SET_STAGE: (context, stage) => {
       context.commit('SET_STAGE', stage);
@@ -83,7 +92,9 @@ const store = new Vuex.Store({
     SUBMIT_REQUEST: (context) => {
       const users = context.state.users.filter(user => user.selected);
       const request = Object.assign(context.state.requestForm, {users});
-      axios.post('/api/request', request);
+      axios.post('/api/request', request).then(() => {
+        context.dispatch('RESET');
+      });
     },
     RESET: (context) => {
       context.dispatch('GET_USERS');

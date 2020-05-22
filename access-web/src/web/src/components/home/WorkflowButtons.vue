@@ -105,7 +105,6 @@ export default {
     submitForm() {
       this.showSubmitted = true;
       this.$store.dispatch('SUBMIT_REQUEST');
-      this.clearForm();
     },
     clearForm() {
       this.$store.dispatch('RESET');

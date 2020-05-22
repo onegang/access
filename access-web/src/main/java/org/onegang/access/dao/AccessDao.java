@@ -3,6 +3,7 @@ package org.onegang.access.dao;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.onegang.access.entity.Request;
 import org.onegang.access.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,9 @@ public class AccessDao {
 
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private RequestMapper requestMapper;
 	
 	
 	public void insertRole(String role) {
@@ -39,6 +43,14 @@ public class AccessDao {
 	
 	public Collection<String> getRoles() {
 		return userMapper.selectRoles();
+	}
+	
+	public void addRequest(Request request) {
+		requestMapper.insertRequest(request);
+	}
+	
+	public Collection<Request> getRequests(String submitter) {
+		return requestMapper.selectRequests(submitter);
 	}
 
 }
