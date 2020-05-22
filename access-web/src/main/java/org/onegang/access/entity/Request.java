@@ -23,9 +23,9 @@ public class Request {
 	
 	private Date lastModifiedDate;
 	
-	private Collection<String> supporters;
+	private Collection<ApprovalUser> supporters;
 	
-	private Collection<String> approvers;
+	private Collection<ApprovalUser> approvers;
 	
 	private Collection<User> users;
 	
@@ -103,19 +103,19 @@ public class Request {
 		this.purpose = purpose;
 	}
 
-	public Collection<String> getSupporters() {
+	public Collection<ApprovalUser> getSupporters() {
 		return supporters;
 	}
 
-	public void setSupporters(Collection<String> supporters) {
+	public void setSupporters(Collection<ApprovalUser> supporters) {
 		this.supporters = supporters;
 	}
 
-	public Collection<String> getApprovers() {
+	public Collection<ApprovalUser> getApprovers() {
 		return approvers;
 	}
 
-	public void setApprovers(Collection<String> approvers) {
+	public void setApprovers(Collection<ApprovalUser> approvers) {
 		this.approvers = approvers;
 	}
 

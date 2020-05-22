@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.onegang.access.entity.AccessChange.Change;
+import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.entity.User;
@@ -54,13 +55,13 @@ public class AccessDao {
 				requestMapper.insertRequestUser(request.getId(), user.getName(), role);
 		}
 		if(request.getSupporters()!=null) {
-			for(String user: request.getSupporters()) {
-				requestMapper.insertRequestSupporter(request.getId(), user, Status.PENDING);
+			for(ApprovalUser user: request.getSupporters()) {
+				requestMapper.insertRequestSupporter(request.getId(), user.getName(), Status.PENDING);
 			}
 		}
 		if(request.getApprovers()!=null) {
-			for(String user: request.getApprovers()) {
-				requestMapper.insertRequestApprover(request.getId(), user, Status.PENDING);
+			for(ApprovalUser user: request.getApprovers()) {
+				requestMapper.insertRequestApprover(request.getId(), user.getName(), Status.PENDING);
 			}
 		}
 		if(request.getChanges().getAdded()!=null) {

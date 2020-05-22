@@ -2,7 +2,7 @@
   <v-container>
     <h3 class="pt-3">Request Summary</h3>
     <v-divider />
-    <div>Purpose: {{REQUESTFORM.purpose}}</div>
+    <div v-if="REQUESTFORM.purpose">Purpose: {{REQUESTFORM.purpose}}</div>
     <div>Effective Date: {{REQUESTFORM.effectiveDate}}</div>
     <div v-if="REQUESTFORM.expiryDate">Expiry Date: {{REQUESTFORM.expiryDate}}</div>
     <div v-if="REQUESTFORM.supporters.length>0">Supporters: {{REQUESTFORM.supporters.join(", ")}}</div>

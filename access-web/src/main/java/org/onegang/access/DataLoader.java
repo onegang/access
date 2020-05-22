@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.onegang.access.dao.AccessDao;
+import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.entity.User;
@@ -92,7 +93,7 @@ public class DataLoader implements CommandLineRunner {
 		request.setPurpose("Grant ECS to developer");
 		request.setEffectiveDate(new Date());
 		request.setRequestor(MOCK_USER);
-		request.setSupporters(Lists.newArrayList("Bianca Key, 18691"));
+		request.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
 		request.setUsers(Lists.newArrayList(
 			new User("Amiah Bridges, 4586", Lists.newArrayList("Developer", "Administrator", "AmazonECS_FullAccess"), true),
 			new User("Nathalie Patterson, 11639", Lists.newArrayList("Developer", "Administrator", "Devops03", "AmazonECS_FullAccess"), true)));
@@ -104,12 +105,19 @@ public class DataLoader implements CommandLineRunner {
 		request2.setPurpose("Revoke Manager from Cade Haley due to transfer");
 		request2.setEffectiveDate(new Date());
 		request2.setRequestor(MOCK_USER);
-		request2.setSupporters(Lists.newArrayList("Bianca Key, 18691"));
-		request2.setApprovers(Lists.newArrayList("Carla Kane, 14760"));
+		request2.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
+		request2.setApprovers(toApprovalUser("Carla Kane, 14760", Status.PENDING));
 		request2.setUsers(Lists.newArrayList(
 			new User("Cade Haley, 8943", Lists.newArrayList("Researcher"), true)));
 		request2.setChanges(usersService.computeChanges(request2.getUsers()));
 		accessDao.addRequest(request2);
+	}
+	
+	private Collection<ApprovalUser> toApprovalUser(String name, Status status) {
+		ApprovalUser user = new ApprovalUser();
+		user.setName(name);
+		user.setStatus(status);
+		return Lists.newArrayList(user);
 	}
 
 }

@@ -33,6 +33,8 @@ public class RequestService {
 		LOGGER.info("Submitting request: {}", request.toString());
 		AccessChange changes = userService.computeChanges(request.getUsers());
 		
+		if(request.getPurpose()==null)
+			request.setPurpose("New request");
 		request.setStatus(Status.APPROVING);
 		request.setRequestor(MOCK_USER); //TODO replace when auth is in place
 		request.setChanges(changes);
