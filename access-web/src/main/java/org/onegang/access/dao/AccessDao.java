@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.onegang.access.entity.AccessChange.Change;
 import org.onegang.access.entity.Request;
+import org.onegang.access.entity.Status;
 import org.onegang.access.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -51,6 +52,16 @@ public class AccessDao {
 		for(User user: request.getUsers()) {
 			for(String role: user.getRoles())
 				requestMapper.insertRequestUser(request.getId(), user.getName(), role);
+		}
+		if(request.getSupporters()!=null) {
+			for(String user: request.getSupporters()) {
+				requestMapper.insertRequestSupporter(request.getId(), user, Status.PENDING);
+			}
+		}
+		if(request.getApprovers()!=null) {
+			for(String user: request.getApprovers()) {
+				requestMapper.insertRequestApprover(request.getId(), user, Status.PENDING);
+			}
 		}
 		if(request.getChanges().getAdded()!=null) {
 			for(Change added: request.getChanges().getAdded()) {

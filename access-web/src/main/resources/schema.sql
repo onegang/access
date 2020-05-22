@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS request_user;
 DROP TABLE IF EXISTS request_change;
+DROP TABLE IF EXISTS request_supporter;
+DROP TABLE IF EXISTS request_approver;
 DROP TABLE IF EXISTS request;
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS lookup_role;
@@ -49,5 +51,21 @@ CREATE TABLE request_change (
   PRIMARY KEY(requestId, type, user, role),
   FOREIGN KEY(user) REFERENCES lookup_user(name) ON DELETE CASCADE,
   FOREIGN KEY(role) REFERENCES lookup_role(name) ON DELETE CASCADE,
+  FOREIGN KEY(requestId) REFERENCES request(id) ON DELETE CASCADE
+);
+CREATE TABLE request_supporter (
+  requestId   	INT,
+  user			VARCHAR(250),
+  status		VARCHAR(50)	NOT NULL,
+  PRIMARY KEY(requestId, user),
+  FOREIGN KEY(user) REFERENCES lookup_user(name) ON DELETE CASCADE,
+  FOREIGN KEY(requestId) REFERENCES request(id) ON DELETE CASCADE
+);
+CREATE TABLE request_approver (
+  requestId   	INT,
+  user			VARCHAR(250),
+  status		VARCHAR(50)	NOT NULL,
+  PRIMARY KEY(requestId, user),
+  FOREIGN KEY(user) REFERENCES lookup_user(name) ON DELETE CASCADE,
   FOREIGN KEY(requestId) REFERENCES request(id) ON DELETE CASCADE
 );

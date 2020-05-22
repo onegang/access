@@ -92,6 +92,7 @@ public class DataLoader implements CommandLineRunner {
 		request.setPurpose("Grant ECS to developer");
 		request.setEffectiveDate(new Date());
 		request.setRequestor(MOCK_USER);
+		request.setSupporters(Lists.newArrayList("Bianca Key, 18691"));
 		request.setUsers(Lists.newArrayList(
 			new User("Amiah Bridges, 4586", Lists.newArrayList("Developer", "Administrator", "AmazonECS_FullAccess"), true),
 			new User("Nathalie Patterson, 11639", Lists.newArrayList("Developer", "Administrator", "Devops03", "AmazonECS_FullAccess"), true)));
@@ -103,6 +104,8 @@ public class DataLoader implements CommandLineRunner {
 		request2.setPurpose("Revoke Manager from Cade Haley due to transfer");
 		request2.setEffectiveDate(new Date());
 		request2.setRequestor(MOCK_USER);
+		request2.setSupporters(Lists.newArrayList("Bianca Key, 18691"));
+		request2.setApprovers(Lists.newArrayList("Carla Kane, 14760"));
 		request2.setUsers(Lists.newArrayList(
 			new User("Cade Haley, 8943", Lists.newArrayList("Researcher"), true)));
 		request2.setChanges(usersService.computeChanges(request2.getUsers()));
