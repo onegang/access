@@ -52,11 +52,15 @@ public class AccessChange {
 	}
 	
 	
-	public class Change {
+	public static class Change {
 	
 		private Collection<String> usernames;
 	
 		private Collection<String> roles;
+		
+		public Change() {
+			super();
+		}
 		
 		public Change(Collection<String> usernames, Collection<String> roles) {
 			super();
