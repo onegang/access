@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.onegang.access.KafkaConfig;
 import org.onegang.access.dao.AccessDao;
 import org.onegang.access.entity.AccessChange;
+import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.slf4j.Logger;
@@ -45,6 +46,10 @@ public class RequestService {
 		if(request.getPurpose()==null)
 			request.setPurpose("New request");
 		request.setStatus(Status.APPROVING);
+		for(ApprovalUser user: request.getSupporters())
+			user.setStatus(Status.PENDING);
+		for(ApprovalUser user: request.getApprovers())
+			user.setStatus(Status.PENDING);
 		request.setRequestor(MOCK_USER); //TODO replace when auth is in place
 		request.setChanges(changes);
 		request = accessDao.addRequest(request);
