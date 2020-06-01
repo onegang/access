@@ -12,6 +12,14 @@ public class Utils {
 		}
 	}
 	
+	public static boolean isEmpty(String value) {
+		return value==null||value.isEmpty();
+	}
+	
+	public static boolean isEmpty(Collection<?> value) {
+		return value==null||value.isEmpty();
+	}
+	
 	public static <T>T first(Collection<T> values) {
 		if(values==null || values.isEmpty())
 			return null;

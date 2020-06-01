@@ -24,6 +24,9 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 public class KafkaConfig {
 	
 	public static final String TOPIC_APPROVAL = "ACCESS_APPROVAL";
+	
+	public static final String TOPIC_IMPLEMENTATION = "ACCESS_IMPLEMENTATION";
+	
 
 	@Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
@@ -38,6 +41,11 @@ public class KafkaConfig {
     @Bean
     public NewTopic approvalTopic() {
          return new NewTopic(TOPIC_APPROVAL, 1, (short) 1);
+    }
+    
+    @Bean
+    public NewTopic implementationTopic() {
+         return new NewTopic(TOPIC_IMPLEMENTATION, 1, (short) 1);
     }
     
     @Bean

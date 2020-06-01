@@ -11,9 +11,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailConsumer {
+public class EmailApprovalConsumer {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmailConsumer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmailApprovalConsumer.class);
 	
 	@Value("${app-url}")
 	private String appUrl;
@@ -22,7 +22,7 @@ public class EmailConsumer {
 			  topics = "ACCESS_APPROVAL", 
 			  containerFactory = "kafkaListenerContainerFactory")
 	public void listen(Request request) {
-		LOGGER.info("Received request: {} ", request);
+		LOGGER.debug("Received request: {} ", request);
 		if(Status.APPROVING==request.getStatus()) {
 			informApproving(request);
 		} else if(Status.APPROVED==request.getStatus()) {
