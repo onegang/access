@@ -24,6 +24,11 @@
   </properties>
 
   <dependencies>
+  	<dependency>
+      <groupId>onegang</groupId>
+      <artifactId>access-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
