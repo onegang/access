@@ -1,4 +1,4 @@
-package org.onegang.access;
+package org.onegang.access.email;
 
 
 import java.io.IOException;

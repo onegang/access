@@ -21,6 +21,11 @@
   </properties>
 
   <dependencies>
+  	<dependency>
+      <groupId>onegang</groupId>
+      <artifactId>access-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
