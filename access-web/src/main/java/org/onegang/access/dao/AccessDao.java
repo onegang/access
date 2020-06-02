@@ -1,6 +1,7 @@
 package org.onegang.access.dao;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,6 +56,7 @@ public class AccessDao {
 	}
 	
 	public Request addRequest(Request request) {
+		request.setLastModifiedDate(new Date());
 		requestMapper.insertRequest(request);
 		for(User user: request.getUsers()) {
 			for(String role: user.getRoles())
@@ -111,19 +113,35 @@ public class AccessDao {
 		return request;
 	}
 	
-	public Collection<Request> getRequests(String submitter) {
-		return requestMapper.selectRequests(submitter);
+	public Collection<Request> getPendignActionRequests(String submitter) {
+		return requestMapper.selectPendingRequests(submitter, Status.PENDING);
+	}
+	
+	public Collection<Request> getOpenedRequests(String submitter) {
+		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.APPROVING);
+		requests.addAll(requestMapper.selectRequests(submitter, Status.IMPLEMENTING));
+		return requests;
+	}
+	
+	public Collection<Request> getClosedRequests(String submitter) {
+		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.CANCELLED);
+		requests.addAll(requestMapper.selectRequests(submitter, Status.REJECTED));
+		requests.addAll(requestMapper.selectRequests(submitter, Status.DONE));
+		return requests;
 	}
 	
 	public void updateRequestSupport(Request request, ApprovalUser user) {
+		request.setLastModifiedDate(new Date());
 		requestMapper.updateRequestSupporter(request.getId(), user.getName(), user.getStatus());
 	}
 	
 	public void updateRequestApprover(Request request, ApprovalUser user) {
+		request.setLastModifiedDate(new Date());
 		requestMapper.updateRequestApprover(request.getId(), user.getName(), user.getStatus());
 	}
 
 	public void updateStatus(Request request) {
+		request.setLastModifiedDate(new Date());
 		requestMapper.updateStatus(request.getId(), request.getStatus());
 	}
 	
