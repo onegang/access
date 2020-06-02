@@ -116,12 +116,13 @@ public class AccessDao {
 	}
 	
 	public Collection<Request> getPendignActionRequests(String submitter) {
-		return requestMapper.selectPendingRequests(submitter, Status.PENDING);
+		return requestMapper.selectApprovalRequests(submitter, Status.PENDING);
 	}
 	
 	public Collection<Request> getOpenedRequests(String submitter) {
 		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.APPROVING);
 		requests.addAll(requestMapper.selectRequests(submitter, Status.IMPLEMENTING));
+		requests.addAll(requestMapper.selectApprovalRequests(submitter, Status.PENDING));
 		requests = sortByLastModified(requests);
 		return requests;
 	}
@@ -130,6 +131,8 @@ public class AccessDao {
 		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.CANCELLED);
 		requests.addAll(requestMapper.selectRequests(submitter, Status.REJECTED));
 		requests.addAll(requestMapper.selectRequests(submitter, Status.DONE));
+		requests.addAll(requestMapper.selectApprovalRequests(submitter, Status.APPROVED));
+		requests.addAll(requestMapper.selectApprovalRequests(submitter, Status.REJECTED));
 		requests = sortByLastModified(requests);
 		return requests;
 	}

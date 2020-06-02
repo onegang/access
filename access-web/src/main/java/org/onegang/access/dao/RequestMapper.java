@@ -26,7 +26,7 @@ public interface RequestMapper {
 			+ "WHERE ((s.user=#{submitter} AND s.status=#{status}) OR (a.user=#{submitter} AND a.status=#{status}))"
 			+ "ORDER BY r.lastModifiedDate desc")
 	@ResultMap("RequestMap")
-	Collection<Request> selectPendingRequests(String submitter, Status status);
+	Collection<Request> selectApprovalRequests(String submitter, Status status);
 	
 	@Select("SELECT r.id as id, r.status as status, r.requestor as requestor, r.purpose as purpose, "
 			+ "r.comments as comments, r.effectiveDate as effectiveDate, r.expiryDate as expiryDate, "
