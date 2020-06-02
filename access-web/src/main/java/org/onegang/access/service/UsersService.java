@@ -22,9 +22,15 @@ public class UsersService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UsersService.class);
 	
+	private static final String MOCK_USER = "Alden Page, 10078";
+
 	@Autowired
 	private AccessDao accessDao;
-
+	
+	
+	public String getCurrentUser() {
+		return MOCK_USER; //TODO replace when auth is in place
+	}
 
 	public Collection<User> getUsers() {
 		return accessDao.getUsers();

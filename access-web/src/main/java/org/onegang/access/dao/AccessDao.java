@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
 
 @Repository
 public class AccessDao {
-
+	
 	@Autowired
 	private UserMapper userMapper;
 	

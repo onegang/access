@@ -13,6 +13,7 @@ import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.entity.User;
 import org.onegang.access.service.UsersService;
+import org.onegang.access.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class DataLoader implements CommandLineRunner {
 		Request request  = new Request();
 		request.setStatus(Status.DONE);
 		request.setPurpose("Grant ECS to developer");
-		request.setEffectiveDate(new Date());
+		request.setEffectiveDate(Utils.addDays(new Date(), -50));
 		request.setRequestor(MOCK_USER);
 		request.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
 		request.setUsers(Lists.newArrayList(
@@ -100,41 +101,52 @@ public class DataLoader implements CommandLineRunner {
 		request.setChanges(usersService.computeChanges(request.getUsers()));
 		accessDao.addRequest(request);
 		
-		Request request3  = new Request();
-		request3.setStatus(Status.REJECTED);
-		request3.setPurpose("Grant Devops02 to Adolfo Brewer");
-		request3.setEffectiveDate(new Date());
-		request3.setRequestor(MOCK_USER);
-		request3.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
-		request3.setApprovers(toApprovalUser("Carla Kane, 14760", Status.REJECTED));
-		request3.setUsers(Lists.newArrayList(
+		request  = new Request();
+		request.setStatus(Status.REJECTED);
+		request.setPurpose("Grant Devops02 to Adolfo Brewer");
+		request.setEffectiveDate(Utils.addDays(new Date(), -10));
+		request.setRequestor(MOCK_USER);
+		request.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
+		request.setApprovers(toApprovalUser("Carla Kane, 14760", Status.REJECTED));
+		request.setUsers(Lists.newArrayList(
 			new User("Adolfo Brewer, 16202", Lists.newArrayList("Devops02"), true)));
-		request3.setChanges(usersService.computeChanges(request3.getUsers()));
-		accessDao.addRequest(request3);
+		request.setChanges(usersService.computeChanges(request.getUsers()));
+		accessDao.addRequest(request);
 		
-		Request request2  = new Request();
-		request2.setStatus(Status.APPROVING);
-		request2.setPurpose("Revoke Manager from Cade Haley due to transfer");
-		request2.setEffectiveDate(new Date());
-		request2.setRequestor(MOCK_USER);
-		request2.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
-		request2.setApprovers(toApprovalUser("Carla Kane, 14760", Status.PENDING));
-		request2.setUsers(Lists.newArrayList(
+		request  = new Request();
+		request.setStatus(Status.APPROVING);
+		request.setPurpose("Revoke Manager from Cade Haley due to transfer");
+		request.setEffectiveDate(Utils.addDays(new Date(), 7));
+		request.setRequestor(MOCK_USER);
+		request.setSupporters(toApprovalUser("Bianca Key, 18691", Status.APPROVED));
+		request.setApprovers(toApprovalUser("Carla Kane, 14760", Status.PENDING));
+		request.setUsers(Lists.newArrayList(
 			new User("Cade Haley, 8943", Lists.newArrayList("Researcher"), true)));
-		request2.setChanges(usersService.computeChanges(request2.getUsers()));
-		accessDao.addRequest(request2);
+		request.setChanges(usersService.computeChanges(request.getUsers()));
+		accessDao.addRequest(request);
 		
-		Request request4  = new Request();
-		request4.setStatus(Status.APPROVING);
-		request4.setPurpose("Grant Auditor to Ahmed Humphrey");
-		request4.setManual("Please grant Auditor rights to him.");
-		request4.setEffectiveDate(new Date());
-		request4.setRequestor(MOCK_USER);
-		request4.setSupporters(toApprovalUser("Bianca Key, 18691", Status.PENDING));
-		request4.setUsers(Lists.newArrayList(
+		request  = new Request();
+		request.setStatus(Status.APPROVING);
+		request.setPurpose("Grant Auditor to Ahmed Humphrey");
+		request.setManual("Please grant Auditor rights to him.");
+		request.setEffectiveDate(Utils.addDays(new Date(), 7));
+		request.setRequestor(MOCK_USER);
+		request.setSupporters(toApprovalUser("Bianca Key, 18691", Status.PENDING));
+		request.setUsers(Lists.newArrayList(
 			new User("Ahmed Humphrey, 15697", Lists.newArrayList("Devops01", "Administrator"), true)));
-		request4.setChanges(usersService.computeChanges(request4.getUsers()));
-		accessDao.addRequest(request4);
+		request.setChanges(usersService.computeChanges(request.getUsers()));
+		accessDao.addRequest(request);
+		
+		request  = new Request();
+		request.setStatus(Status.APPROVING);
+		request.setPurpose("Grant Researcher to Adolfo Brewer");
+		request.setEffectiveDate(Utils.addDays(new Date(), 10));
+		request.setRequestor("Adolfo Brewer, 16202");
+		request.setSupporters(toApprovalUser(MOCK_USER, Status.PENDING));
+		request.setUsers(Lists.newArrayList(
+			new User("Adolfo Brewer, 16202", Lists.newArrayList("Researcher"), true)));
+		request.setChanges(usersService.computeChanges(request.getUsers()));
+		accessDao.addRequest(request);
 	}
 	
 	private Collection<ApprovalUser> toApprovalUser(String name, Status status) {

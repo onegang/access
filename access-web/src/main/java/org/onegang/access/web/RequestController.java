@@ -29,6 +29,11 @@ public class RequestController {
 		return requestService.getRequest(id);
 	}
 	
+	@GetMapping("/{id}/actions")
+	public Collection<String> getRequestActions(@PathVariable int id) {
+		return requestService.getRequestActions(id);
+	}
+	
 	@PostMapping
 	public Request submitRequest(@RequestBody Request request) {
 		return requestService.submitRequest(request);

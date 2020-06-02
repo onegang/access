@@ -1,13 +1,24 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="9">
+      <v-col cols="3">
         <h4>{{request.status}}</h4>
       </v-col>
-      <v-col cols="3">
-        <v-btn small color="error" class="float-right"><v-icon>mdi-close</v-icon>Cancel Request</v-btn>
+      <v-col cols="9">
+        <v-btn v-show="has('Cancel')" small color="error" class="float-right mx-1">
+          <v-icon>mdi-close</v-icon>Cancel Request
+        </v-btn>
+        <v-btn v-show="has('Reject')" small color="error" class="float-right mx-1">
+          <v-icon>mdi-close</v-icon>Reject
+        </v-btn>
+        <v-btn v-show="has('Approve')" small color="primary" class="float-right mx-1">
+          <v-icon>mdi-check</v-icon>Approve
+        </v-btn>        
       </v-col>
     </v-row>
+    <div class="py-1">
+      <span class="subtitle-2">Requested by: </span>{{request.requestor}}
+    </div>
     <div v-if="request.purpose" class="py-1">
       <span class="subtitle-2">Purpose: </span>{{request.purpose}}
     </div>
@@ -75,6 +86,10 @@ export default {
     request: {
       type: Object,
       required: true,
+    },
+    actions: {
+      type: Array,
+      required: true,
     }
   },
   methods:{
@@ -89,6 +104,9 @@ export default {
         else
           return "";
       },
+      has(action) {
+        return this.actions.includes(action);
+      }
   }
 };
 </script>

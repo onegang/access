@@ -15,12 +15,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Sets;
+
 @Service
 public class RequestService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestService.class);
 	
-	private static final String MOCK_USER = "Alden Page, 10078";
+	
 	
 	@Autowired
 	private AccessDao accessDao;
@@ -36,7 +38,7 @@ public class RequestService {
 	
 
 	public Collection<Request> getRequests() {
-		return accessDao.getRequests(MOCK_USER);
+		return accessDao.getRequests(userService.getCurrentUser());
 	}
 
 	public Request getRequest(int id) {
@@ -56,7 +58,7 @@ public class RequestService {
 			user.setStatus(Status.PENDING);
 		for(ApprovalUser user: request.getApprovers())
 			user.setStatus(Status.PENDING);
-		request.setRequestor(MOCK_USER); //TODO replace when auth is in place
+		request.setRequestor(userService.getCurrentUser());
 		request.setChanges(changes);
 		request = accessDao.addRequest(request);
 		sendApprovalMessage(request);
@@ -72,6 +74,33 @@ public class RequestService {
 	
 	private boolean hasKafka() {
 		return activeProfiles.contains("kafka");
+	}
+
+	public Collection<String> getRequestActions(int id) {
+//		if(true)
+//			return Lists.newArrayList("Cancel", "Approve", "Reject");
+		
+		Collection<String> actions = Sets.newHashSet();
+		Request request = getRequest(id);
+		String me = userService.getCurrentUser();
+		for(ApprovalUser user: request.getSupporters()) {
+			if(user.getName().equals(me) && Status.PENDING==user.getStatus()) {
+				actions.add("Approve");
+				actions.add("Reject");
+				break;
+			}
+		}
+		for(ApprovalUser user: request.getApprovers()) {
+			if(user.getName().equals(me) && Status.PENDING==user.getStatus()) {
+				actions.add("Approve");
+				actions.add("Reject");
+				break;
+			}
+		}
+		if(request.getRequestor().equals(me) && request.getStatus()==Status.APPROVING) {
+			actions.add("Cancel");
+		}
+		return actions;
 	}
 
 }
