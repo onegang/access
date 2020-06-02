@@ -1,6 +1,8 @@
 package org.onegang.access.dao;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -120,13 +122,15 @@ public class AccessDao {
 	public Collection<Request> getOpenedRequests(String submitter) {
 		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.APPROVING);
 		requests.addAll(requestMapper.selectRequests(submitter, Status.IMPLEMENTING));
+		requests = sortByLastModified(requests);
 		return requests;
 	}
-	
+
 	public Collection<Request> getClosedRequests(String submitter) {
 		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.CANCELLED);
 		requests.addAll(requestMapper.selectRequests(submitter, Status.REJECTED));
 		requests.addAll(requestMapper.selectRequests(submitter, Status.DONE));
+		requests = sortByLastModified(requests);
 		return requests;
 	}
 	
@@ -151,6 +155,17 @@ public class AccessDao {
 				requestMapper.insertRequestChange(requestId, type, user, role);
 			}
 		}
+	}
+	
+	private Collection<Request> sortByLastModified(Collection<Request> requests) {
+		List<Request> sorted = Lists.newArrayList(requests);
+		Collections.sort(sorted, new Comparator<Request>() {
+			@Override
+			public int compare(Request o1, Request o2) {				
+				return o1.getLastModifiedDate().compareTo(o2.getLastModifiedDate());
+			}			
+		});
+		return sorted;
 	}
 
 }
