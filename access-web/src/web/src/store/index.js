@@ -25,6 +25,8 @@ const store = new Vuex.Store({
     requestForm: Object.assign({}, defaultForm),
     changes: null,
     requests: null,
+    requestDetail: null,
+    requestActions: [],
   },
   getters: {
     getField,
@@ -35,6 +37,8 @@ const store = new Vuex.Store({
     REQUESTFORM: (state) => state.requestForm,
     CHANGES: (state) => state.changes,
     REQUESTS: (state) => state.requests,
+    REQUESTDETAIL: (state) => state.requestDetail,
+    REQUESTACTIONS: (state) => state.requestActions
   },
   mutations: {
     updateField,
@@ -56,6 +60,12 @@ const store = new Vuex.Store({
     SET_REQUESTS: (state, requests) => {
       state.requests = requests;
     },
+    SET_REQUESTDETAIL: (state, request) => {
+      state.requestDetail = request;
+    },
+    SET_REQUESTACTIONS: (state, actions) => {
+      state.requestActions = actions;
+    },
     RESET_FORM: (state) => {
       for(const p in defaultForm) {
         state.requestForm[p] = defaultForm[p];
@@ -74,6 +84,14 @@ const store = new Vuex.Store({
     GET_REQUESTS: async (context) => {
       const { data } = await axios.get('/api/request');
       context.commit('SET_REQUESTS', data);
+    },
+    GET_REQUESTDETAIL: async (context, id) => {
+      const { data } = await axios.get('/api/request/'+id);
+      context.commit('SET_REQUESTDETAIL', data);
+    },
+    GET_REQUESTACTIONS: async (context, id) => {
+      const { data } = await axios.get('/api/request/'+id+'/actions');
+      context.commit('SET_REQUESTACTIONS', data);
     },
     CLEAR_ERROR: (context) => {
       context.commit('SET_ERROR', null);
@@ -102,7 +120,17 @@ const store = new Vuex.Store({
       context.dispatch('GET_USERS');
       context.dispatch('SET_STAGE', 0);
       context.commit('RESET_FORM', defaultForm);
-    }
+    },
+    DO_ACTION: async (context, actionInfo) => {
+      const id = actionInfo.id;
+      const action = actionInfo.action;
+      axios.post('/api/request/'+id+'/action/'+action).
+          then((response) => {
+            const request = response.data;
+            context.commit('SET_REQUESTDETAIL', request);
+            context.dispatch('GET_REQUESTACTIONS', id);
+      });
+    },
   },
   modules: {
   },

@@ -4,8 +4,8 @@
       <v-container>
         <v-tabs right>
           <v-tab to="/">Home</v-tab>
-          <v-tab to="/requests">My Requests</v-tab>
-          <v-tab to="/about">About</v-tab>
+          <v-tab to="/page/requests">My Requests</v-tab>
+          <v-tab to="/page/about">About</v-tab>
         </v-tabs>
         <router-view class="pt-3"></router-view>
         <ErrorDialog />
