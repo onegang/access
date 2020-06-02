@@ -21,9 +21,9 @@ public class RequestController {
 	@Autowired
 	private RequestService requestService;
 	
-	@GetMapping
-	public Collection<Request> getRequests() {
-		return requestService.getRequests();
+	@GetMapping("/filter/{filter}")
+	public Collection<Request> getRequests(@PathVariable String filter) {
+		return requestService.getRequests(filter);
 	}
 	
 	@GetMapping("/{id}")

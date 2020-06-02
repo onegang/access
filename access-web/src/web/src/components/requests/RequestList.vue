@@ -10,7 +10,24 @@
     hide-default-footer
   >
     <template v-slot:header>
-      
+      <v-row>
+        <v-col cols="3">
+          <h2>My Requests</h2>
+        </v-col>
+        <v-col cols="9">
+          <v-btn-toggle v-model="filter" mandatory light class="float-right" @change="changeFilter">
+            <v-btn value="FOR_ACTION">
+              For Action
+            </v-btn>
+            <v-btn value="OPENED">
+              Opened
+            </v-btn>
+            <v-btn value="CLOSED">
+              Closed
+            </v-btn>
+          </v-btn-toggle>
+        </v-col>
+      </v-row>
     </template>
     <template v-slot:default="props">
       <v-expansion-panels multiple>
@@ -80,10 +97,14 @@
     components: {
       RequestListItem,
     },
+    mounted() {
+      this.$store.dispatch('GET_REQUESTS', this.filter);
+    },
     data() {
       return {
         page: 1,
         itemsPerPage: 10,
+        filter: "FOR_ACTION",
       };
     },
     computed: {
@@ -112,6 +133,9 @@
           return "info";
         else
           return "";
+      },
+      changeFilter() {
+        this.$store.dispatch('GET_REQUESTS', this.filter);
       },
     },
   };

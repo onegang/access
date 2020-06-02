@@ -23,9 +23,23 @@ public interface RequestMapper {
 			+ "FROM request r "
 			+ "LEFT OUTER JOIN request_supporter s on s.requestId=r.id "
 			+ "LEFT OUTER JOIN request_approver a on a.requestId=r.id "
-			+ "WHERE r.requestor=#{submitter}")
+			+ "WHERE ((s.user=#{submitter} AND s.status=#{status}) OR (a.user=#{submitter} AND a.status=#{status}))"
+			+ "ORDER BY r.lastModifiedDate desc")
 	@ResultMap("RequestMap")
-	Collection<Request> selectRequests(String submitter);
+	Collection<Request> selectApprovalRequests(String submitter, Status status);
+	
+	@Select("SELECT r.id as id, r.status as status, r.requestor as requestor, r.purpose as purpose, "
+			+ "r.comments as comments, r.effectiveDate as effectiveDate, r.expiryDate as expiryDate, "
+			+ "r.submitDate as submitDate, r.lastModifiedDate as lastModifiedDate, r.manual as manual, "
+			+ "s.user as s_name, s.status as s_status, "
+			+ "a.user as a_name, a.status as a_status "
+			+ "FROM request r "
+			+ "LEFT OUTER JOIN request_supporter s on s.requestId=r.id "
+			+ "LEFT OUTER JOIN request_approver a on a.requestId=r.id "
+			+ "WHERE r.requestor=#{submitter} AND r.status=#{status} "
+			+ "ORDER BY r.lastModifiedDate desc")
+	@ResultMap("RequestMap")
+	Collection<Request> selectRequests(String submitter, Status status);
 	
 	@Select("SELECT r.id as id, r.status as status, r.requestor as requestor, r.purpose as purpose, "
 			+ "r.comments as comments, r.effectiveDate as effectiveDate, r.expiryDate as expiryDate, "

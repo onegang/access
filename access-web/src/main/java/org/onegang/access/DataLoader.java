@@ -159,6 +159,18 @@ public class DataLoader implements CommandLineRunner {
 			new User("Alana Humphrey, 4439", Lists.newArrayList("Devops01"), true)));
 		request.setChanges(usersService.computeChanges(request.getUsers()));
 		accessDao.addRequest(request);
+		
+		request  = new Request();
+		request.setStatus(Status.APPROVING);
+		request.setPurpose("Grant Devops03 to Aiyana Barber");
+		request.setEffectiveDate(Utils.addDays(new Date(), 10));
+		request.setRequestor("Aiyana Barber, 8769");
+		request.setSupporters(toApprovalUser(MOCK_USER, Status.PENDING));
+		request.setApprovers(toApprovalUser(MOCK_USER, Status.PENDING));
+		request.setUsers(Lists.newArrayList(
+			new User("Aiyana Barber, 8769", Lists.newArrayList("Devops03"), true)));
+		request.setChanges(usersService.computeChanges(request.getUsers()));
+		accessDao.addRequest(request);
 	}
 	
 	private Collection<ApprovalUser> toApprovalUser(String name, Status status) {

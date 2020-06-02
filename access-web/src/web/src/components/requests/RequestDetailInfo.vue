@@ -1,10 +1,11 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="3">
-        <h4>{{request.status}}</h4>
+      <v-col cols="6" xs="3">
+        <span class="title">{{request.status}}</span>
+        <span class="subtitle-2 pl-3">(Last modified: {{moment(request.lastModifiedDate).fromNow()}})</span>
       </v-col>
-      <v-col cols="9">
+      <v-col cols="6">
         <v-btn v-show="has('Cancel')" small color="error" class="float-right mx-1" @click="doAction('Cancel')">
           <v-icon>mdi-close</v-icon>Cancel Request
         </v-btn>
@@ -17,7 +18,8 @@
       </v-col>
     </v-row>
     <div class="py-1">
-      <span class="subtitle-2">Requested by: </span>{{request.requestor}}
+      <span class="subtitle-2">Requested by: </span>{{request.requestor}} 
+      <span class="pl-3 caption">(Submitted on: {{moment(request.submittedDate).format('YYYY-MM-DD')}})</span>
     </div>
     <div v-if="request.purpose" class="py-1">
       <span class="subtitle-2">Purpose: </span>{{request.purpose}}

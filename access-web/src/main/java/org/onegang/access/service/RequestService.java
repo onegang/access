@@ -39,8 +39,15 @@ public class RequestService {
 	private String activeProfiles;
 	
 
-	public Collection<Request> getRequests() {
-		return accessDao.getRequests(userService.getCurrentUser());
+	public Collection<Request> getRequests(String filter) {
+		if("OPENED".equals(filter))
+			return accessDao.getOpenedRequests(userService.getCurrentUser());
+		else if("CLOSED".equals(filter))
+			return accessDao.getClosedRequests(userService.getCurrentUser());
+		else if("FOR_ACTION".equals(filter))
+			return accessDao.getPendignActionRequests(userService.getCurrentUser());
+		else
+			throw new IllegalArgumentException("Unknown filter found: " + filter);
 	}
 
 	public Request getRequest(int id) {
