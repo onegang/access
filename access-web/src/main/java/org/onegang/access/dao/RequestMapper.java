@@ -7,9 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
-import org.onegang.access.entity.UserRole;
+import org.apache.ibatis.annotations.Update;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
+import org.onegang.access.entity.UserRole;
 
 @Mapper
 public interface RequestMapper {
@@ -66,5 +67,14 @@ public interface RequestMapper {
 	@Insert("INSERT INTO request_approver(requestId, user, status) VALUES("
 			+ "#{requestId}, #{user}, #{status})")
 	void insertRequestApprover(int requestId, String user, Status status);
+	
+	@Update("UPDATE request_supporter SET status=#{status} WHERE requestId=#{requestId} AND user=#{user}")
+	void updateRequestSupporter(int requestId, String user, Status status);
+	
+	@Update("UPDATE request_approver SET status=#{status} WHERE requestId=#{requestId} AND user=#{user}")
+	void updateRequestApprover(int requestId, String user, Status status);
+
+	@Update("UPDATE request SET status=#{status} WHERE id=#{id}")
+	void updateStatus(int id, Status status);
 	
 }

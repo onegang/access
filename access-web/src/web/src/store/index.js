@@ -120,7 +120,17 @@ const store = new Vuex.Store({
       context.dispatch('GET_USERS');
       context.dispatch('SET_STAGE', 0);
       context.commit('RESET_FORM', defaultForm);
-    }
+    },
+    DO_ACTION: async (context, actionInfo) => {
+      const id = actionInfo.id;
+      const action = actionInfo.action;
+      axios.post('/api/request/'+id+'/action/'+action).
+          then((response) => {
+            const request = response.data;
+            context.commit('SET_REQUESTDETAIL', request);
+            context.dispatch('GET_REQUESTACTIONS', id);
+      });
+    },
   },
   modules: {
   },

@@ -5,13 +5,13 @@
         <h4>{{request.status}}</h4>
       </v-col>
       <v-col cols="9">
-        <v-btn v-show="has('Cancel')" small color="error" class="float-right mx-1">
+        <v-btn v-show="has('Cancel')" small color="error" class="float-right mx-1" @click="doAction('Cancel')">
           <v-icon>mdi-close</v-icon>Cancel Request
         </v-btn>
-        <v-btn v-show="has('Reject')" small color="error" class="float-right mx-1">
+        <v-btn v-show="has('Reject')" small color="error" class="float-right mx-1" @click="doAction('Reject')">
           <v-icon>mdi-close</v-icon>Reject
         </v-btn>
-        <v-btn v-show="has('Approve')" small color="primary" class="float-right mx-1">
+        <v-btn v-show="has('Approve')" small color="primary" class="float-right mx-1" @click="doAction('Approve')">
           <v-icon>mdi-check</v-icon>Approve
         </v-btn>        
       </v-col>
@@ -106,6 +106,9 @@ export default {
       },
       has(action) {
         return this.actions.includes(action);
+      },
+      doAction(action) {
+        this.$store.dispatch('DO_ACTION', {id:this.request.id, action});
       }
   }
 };

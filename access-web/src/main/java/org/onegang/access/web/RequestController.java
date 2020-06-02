@@ -2,6 +2,8 @@ package org.onegang.access.web;
 
 import java.util.Collection;
 
+import org.onegang.access.ActionDeniedException;
+import org.onegang.access.dto.Action;
 import org.onegang.access.entity.Request;
 import org.onegang.access.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,13 @@ public class RequestController {
 	}
 	
 	@GetMapping("/{id}/actions")
-	public Collection<String> getRequestActions(@PathVariable int id) {
+	public Collection<Action> getRequestActions(@PathVariable int id) {
 		return requestService.getRequestActions(id);
+	}
+	
+	@PostMapping("/{id}/action/{action}")
+	public Request doAction(@PathVariable int id, @PathVariable Action action) throws ActionDeniedException {
+		return requestService.doAction(id, action);
 	}
 	
 	@PostMapping

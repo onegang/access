@@ -115,6 +115,18 @@ public class AccessDao {
 		return requestMapper.selectRequests(submitter);
 	}
 	
+	public void updateRequestSupport(Request request, ApprovalUser user) {
+		requestMapper.updateRequestSupporter(request.getId(), user.getName(), user.getStatus());
+	}
+	
+	public void updateRequestApprover(Request request, ApprovalUser user) {
+		requestMapper.updateRequestApprover(request.getId(), user.getName(), user.getStatus());
+	}
+
+	public void updateStatus(Request request) {
+		requestMapper.updateStatus(request.getId(), request.getStatus());
+	}
+	
 	private void insertRequestChange(Change change, int requestId, String type) {
 		for(String user: change.getUsernames()) {
 			for(String role: change.getRoles()) {
