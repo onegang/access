@@ -81,8 +81,8 @@ const store = new Vuex.Store({
       const { data } = await axios.get('/api/users');
       context.commit('SET_USERS', data);
     },
-    GET_REQUESTS: async (context) => {
-      const { data } = await axios.get('/api/request');
+    GET_REQUESTS: async (context, filter) => {
+      const { data } = await axios.get('/api/request/filter/'+filter);
       context.commit('SET_REQUESTS', data);
     },
     GET_REQUESTDETAIL: async (context, id) => {
