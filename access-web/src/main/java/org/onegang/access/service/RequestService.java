@@ -40,7 +40,9 @@ public class RequestService {
 	}
 
 	public Request getRequest(int id) {
-		return accessDao.getRequest(id);
+		Request request = accessDao.getRequest(id);
+		request.setChanges(userService.combineChanges(request.getChanges()));
+		return request;
 	}
 
 	public Request submitRequest(Request request) {

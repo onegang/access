@@ -1,5 +1,13 @@
 <template>
   <v-container>
+    <v-row>
+      <v-col cols="9">
+        <h4>{{request.status}}</h4>
+      </v-col>
+      <v-col cols="3">
+        <v-btn small color="error" class="float-right"><v-icon>mdi-close</v-icon>Cancel Request</v-btn>
+      </v-col>
+    </v-row>
     <div v-if="request.purpose" class="py-1">
       <span class="subtitle-2">Purpose: </span>{{request.purpose}}
     </div>
@@ -41,53 +49,33 @@
     <div v-if="request.manual" class="py-1">
       {{request.manual}}
     </div>
-    <!-- <v-skeleton-loader v-if="CHANGES===null" type="paragraph" />
-    <div v-if="!hasChanges">No changes!</div>
-    <div v-if="REQUESTFORM.manual">{{REQUESTFORM.manual}}</div>
-    <div v-if="CHANGES && CHANGES.added">
-      <ChangeItem v-for="(added, index) in CHANGES.added" :key="`add-${index}`" :change="added" type="ADD" />
-    </div>
-    <div v-if="CHANGES && CHANGES.removed">
-      <ChangeItem v-for="(removed, index) in CHANGES.removed" :key="`remove-${index}`" :change="removed" type="REMOVE" />
-    </div> -->
-
+    
+    <ChangeItem class="py-1" v-for="(added, index) in request.changes.added" :key="`add-${index}`" :change="added" type="ADD" />
+  
+    <ChangeItem class="py-1" v-for="(removed, index) in request.changes.removed" :key="`remove-${index}`" :change="removed" type="REMOVE" />
+    
     <h3 class="pt-10">Effective User Access</h3>
     <v-divider class="pb-3" />
     <div v-for="user of request.users" v-bind:key="user.name">
         <UserDetails :user="user" readonly />
     </div>
-    <v-divider class="pb-3" />
-    <v-btn small color="error">Cancel Request</v-btn>
   </v-container>
 </template>
 
 <script>
-// import UserDetails from '../home/UserDetails.vue';
-// import ChangeItem from '../home/ChangeItem.vue';
-
-// console.log(this.request);
+import UserDetails from '../home/UserDetails.vue';
+import ChangeItem from '../home/ChangeItem.vue';
 
 export default {
   components: {
-    // UserDetails,
-    // ChangeItem,
+    UserDetails,
+    ChangeItem,
   },
   props: {
     request: {
       type: Object,
       required: true,
     }
-  },
-  computed: {
-    // selectedUsers() {
-    //   return this.USERS.filter(user => user.selected);
-    // },
-    // hasChanges() {
-    //   if(this.CHANGES===null)
-    //     return false;
-    //   return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0 || this.REQUESTFORM.manual;
-    // },
-    // ...mapGetters(['REQUESTDETAIL']),
   },
   methods:{
     isPending(user) {

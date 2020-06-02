@@ -49,7 +49,7 @@ public class UsersService {
 		return changes;
 	}
 
-	private AccessChange combineChanges(AccessChange changes) {
+	public AccessChange combineChanges(AccessChange changes) {
 		// do a simple amalgation: if the roles are same, merge the users!
 		AccessChange merged = new AccessChange();
 		Map<String, List<AccessChange.Change>> added = changes.getAdded().stream().collect(

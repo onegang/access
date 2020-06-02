@@ -1,17 +1,21 @@
 package org.onegang.access.dao;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.AccessChange.Change;
 import org.onegang.access.entity.ApprovalUser;
-import org.onegang.access.entity.DBChange;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.entity.User;
+import org.onegang.access.entity.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.google.common.collect.Lists;
 
 @Repository
 public class AccessDao {
@@ -84,13 +88,26 @@ public class AccessDao {
 	public Request getRequest(int id) {
 		Request request = requestMapper.selectRequest(id);
 		AccessChange changes = new AccessChange();
-		for(DBChange change: requestMapper.selectRequestChanges(id)) {
+		for(UserRole change: requestMapper.selectRequestChanges(id)) {
 			if("ADD".equals(change.getType()))
 				changes.added(change.getUser(), change.getRole());
 			else if("REMOVE".equals(change.getType()))
 				changes.removed(change.getUser(), change.getRole());
 		}
 		request.setChanges(changes);
+		
+		Collection<User> users = Lists.newArrayList();
+		Collection<UserRole> userRoles = requestMapper.selectRequestEffectiveUserRoles(id);
+		Map<String, List<String>> userMap = userRoles.stream().collect(
+				Collectors.groupingBy(ur -> ur.getUser(), 
+						Collectors.mapping(ur -> ur.getRole(), Collectors.toList())));
+		for(String username: userMap.keySet()) {
+			User user = new User();
+			user.setName(username);
+			user.setRoles(userMap.get(username));
+			users.add(user);
+		}
+		request.setUsers(users);
 		return request;
 	}
 	

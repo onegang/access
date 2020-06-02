@@ -46,7 +46,6 @@ CREATE TABLE request_user (
 );
 CREATE TABLE request_change (
   requestId   	INT,
-  index			INT,
   type			VARCHAR(50),
   user			VARCHAR(250),
   role 			VARCHAR(250),

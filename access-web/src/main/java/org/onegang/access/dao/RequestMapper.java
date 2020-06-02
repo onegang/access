@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
-import org.onegang.access.entity.DBChange;
+import org.onegang.access.entity.UserRole;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 
@@ -39,7 +39,10 @@ public interface RequestMapper {
 	Request selectRequest(int id);
 	
 	@Select("SELECT * FROM request_change WHERE requestId=#{id}")
-	Collection<DBChange> selectRequestChanges(int id);
+	Collection<UserRole> selectRequestChanges(int id);
+	
+	@Select("SELECT * FROM request_user WHERE requestId=#{id}")
+	Collection<UserRole> selectRequestEffectiveUserRoles(int id);
 	
 	@Insert("INSERT INTO request(requestor, status, effectiveDate, expiryDate, submitDate, "
 			+ "lastModifiedDate, purpose, comments, manual) VALUES("

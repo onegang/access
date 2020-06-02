@@ -6,7 +6,7 @@ package org.onegang.access.entity;
  * @author TC
  *
  */
-public class DBChange {
+public class UserRole {
 
 	private String type;
 	

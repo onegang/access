@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>{{user.name}}</h3>
-    <v-autocomplete
+    <v-autocomplete v-if="!readonly"
       v-model="user.roles"
       :items="ROLES"
       :readonly="readonly"
@@ -12,6 +12,17 @@
       label="Roles"
       multiple deletable-chips
     ></v-autocomplete>
+    <v-combobox v-if="readonly"
+      v-model="user.roles"
+      :items="ROLES"
+      :readonly="readonly"
+      :chips="!readonly"
+      :filter="filterRoles"
+      :clearable="!readonly"
+      @paste="onPaste"
+      label="Roles"
+      multiple deletable-chips
+    ></v-combobox>
   </div>
 </template>
 
