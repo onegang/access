@@ -39,6 +39,10 @@ public class RequestService {
 		return accessDao.getRequests(MOCK_USER);
 	}
 
+	public Request getRequest(int id) {
+		return accessDao.getRequest(id);
+	}
+
 	public Request submitRequest(Request request) {
 		LOGGER.info("Submitting request: {}", request.toString());
 		AccessChange changes = userService.computeChanges(request.getUsers());

@@ -3,8 +3,10 @@ package org.onegang.access.dao;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.AccessChange.Change;
 import org.onegang.access.entity.ApprovalUser;
+import org.onegang.access.entity.DBChange;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.entity.User;
@@ -76,6 +78,19 @@ public class AccessDao {
 				insertRequestChange(removed, request.getId(), "REMOVE");
 			}
 		}
+		return request;
+	}
+	
+	public Request getRequest(int id) {
+		Request request = requestMapper.selectRequest(id);
+		AccessChange changes = new AccessChange();
+		for(DBChange change: requestMapper.selectRequestChanges(id)) {
+			if("ADD".equals(change.getType()))
+				changes.added(change.getUser(), change.getRole());
+			else if("REMOVE".equals(change.getType()))
+				changes.removed(change.getUser(), change.getRole());
+		}
+		request.setChanges(changes);
 		return request;
 	}
 	

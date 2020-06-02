@@ -10,7 +10,7 @@ A prototype to manage users access.
 ## Development
 - Start Kakfa
  - `bin\windows\zookeeper-server-start.bat config\zookeeper.properties`
- - `bin\kafka-server-start.sh config\server.properties`
+ - `bin\windows\kafka-server-start.bat config\server.properties`
 - Start Kafka monitoring tool (Kafdrop)
  - Download binary: `https://github.com/obsidiandynamics/kafdrop/releases`
  - Launch cmd

@@ -48,7 +48,7 @@ public class EmailImplementationConsumer {
 	}
 
 	private String toURL(Request request) {
-		return appUrl + "/requests/" + request.getId();
+		return appUrl + "/page/requests/" + request.getId();
 	}
 	
 }

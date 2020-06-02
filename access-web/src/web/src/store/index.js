@@ -25,6 +25,7 @@ const store = new Vuex.Store({
     requestForm: Object.assign({}, defaultForm),
     changes: null,
     requests: null,
+    requestDetail: null,
   },
   getters: {
     getField,
@@ -35,6 +36,7 @@ const store = new Vuex.Store({
     REQUESTFORM: (state) => state.requestForm,
     CHANGES: (state) => state.changes,
     REQUESTS: (state) => state.requests,
+    REQUESTDETAIL: (state) => state.requestDetail
   },
   mutations: {
     updateField,
@@ -56,6 +58,9 @@ const store = new Vuex.Store({
     SET_REQUESTS: (state, requests) => {
       state.requests = requests;
     },
+    SET_REQUESTDETAIL: (state, request) => {
+      state.requestDetail = request;
+    },
     RESET_FORM: (state) => {
       for(const p in defaultForm) {
         state.requestForm[p] = defaultForm[p];
@@ -74,6 +79,10 @@ const store = new Vuex.Store({
     GET_REQUESTS: async (context) => {
       const { data } = await axios.get('/api/request');
       context.commit('SET_REQUESTS', data);
+    },
+    GET_REQUESTDETAIL: async (context, id) => {
+      const { data } = await axios.get('/api/request/'+id);
+      context.commit('SET_REQUESTDETAIL', data);
     },
     CLEAR_ERROR: (context) => {
       context.commit('SET_ERROR', null);

@@ -24,6 +24,10 @@
   </div>
 
   <div v-if="request.manual" class="pa-3">{{request.manual}}</div>
+  <v-btn class="ma-2" outlined small color="indigo"
+    :to="`/page/requests/${request.id}`">
+      <span>See more details...</span>
+  </v-btn>
 </div>
 </template>
 

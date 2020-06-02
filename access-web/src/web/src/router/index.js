@@ -11,14 +11,19 @@ const routes = [
     component: Home,
   },
   {
-    path: '/requests',
-    name: 'My Requets',
+    path: '/page/requests',
+    name: 'My Requests',
     component: () => import('../views/Requests.vue'),
   },
   {
-    path: '/about',
+    path: '/page/about',
     name: 'About',
     component: () => import('../views/About.vue'),
+  },
+  {
+    path: '/page/requests/:id',
+    name: 'Request Details',
+    component: () => import('../views/RequestDetails.vue'),
   },
 ];
 
