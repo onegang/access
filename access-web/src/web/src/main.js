@@ -4,7 +4,9 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import axios from 'axios'
+import moment from 'moment'
 
+Vue.prototype.moment = moment
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false;
