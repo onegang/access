@@ -14,7 +14,10 @@
         </v-btn>
         <v-btn v-show="has('Approve')" small color="primary" class="float-right mx-1" @click="doAction('Approve')">
           <v-icon>mdi-check</v-icon>Approve
-        </v-btn>        
+        </v-btn> 
+        <v-btn v-show="has('Implement')" small color="primary" class="float-right mx-1" @click="doAction('Implement')">
+          <v-icon>mdi-autorenew</v-icon>Implement
+        </v-btn>       
       </v-col>
     </v-row>
     <div class="py-1">

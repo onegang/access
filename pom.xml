@@ -20,6 +20,7 @@
 		<module>access-common</module>
 		<module>access-tools</module>
 		<module>access-consumer-email</module>
+		<module>access-consumer-implementor</module>
 		<module>access-web</module>
 	</modules>
 	

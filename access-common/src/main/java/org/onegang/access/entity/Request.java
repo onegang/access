@@ -147,9 +147,10 @@ public class Request {
 
 	@Override
 	public String toString() {
-		return "Request [id=" + id + ", requestor=" + requestor + ", purpose=" + purpose + ", comments=" + comments
-				+ ", effectiveDate=" + effectiveDate + ", expiryDate=" + expiryDate + ", submitDate=" + submitDate
-				+ ", supporters=" + supporters + ", approvers=" + approvers + ", users=" + users + "]";
+		return "Request [id=" + id + ", status=" + status + ", requestor=" + requestor + ", purpose=" + purpose
+				+ ", comments=" + comments + ", manual=" + manual + ", effectiveDate=" + effectiveDate + ", expiryDate="
+				+ expiryDate + ", submitDate=" + submitDate + ", lastModifiedDate=" + lastModifiedDate + ", supporters="
+				+ supporters + ", approvers=" + approvers + ", users=" + users + ", changes=" + changes + "]";
 	}
-	
+
 }

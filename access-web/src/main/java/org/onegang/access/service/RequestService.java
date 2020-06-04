@@ -24,7 +24,7 @@ public class RequestService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestService.class);
 	
-	
+	private static final boolean DEBUG = true;
 	
 	@Autowired
 	private AccessDao accessDao;
@@ -98,6 +98,9 @@ public class RequestService {
 		if(request.getRequestor().equals(me) && request.getStatus()==Status.APPROVING) {
 			actions.add(Action.Cancel);
 		}
+		
+		if(DEBUG && request.getStatus()==Status.IMPLEMENTING)
+			actions.add(Action.Implement);
 		return actions;
 	}
 
@@ -111,6 +114,8 @@ public class RequestService {
 			return doApprove(request);
 		} else if(Action.Reject==action) {
 			return doReject(request);
+		} else if(Action.Implement==action) {
+			return doImplement(request);
 		}
 		throw new IllegalArgumentException("Unknown action: " + action);
 	}
@@ -162,6 +167,15 @@ public class RequestService {
 			request.setStatus(Status.IMPLEMENTING);
 			accessDao.updateStatus(request);
 			sendApprovalMessage(request);
+			sendImplementMessage(request);
+		}
+		return request;
+	}
+	
+	private Request doImplement(Request request) {		
+		//Only used for debugging
+		if(request.getStatus()==Status.IMPLEMENTING) {
+			sendImplementMessage(request);
 		}
 		return request;
 	}
@@ -183,6 +197,13 @@ public class RequestService {
 	private void sendApprovalMessage(Request msg) {
 		if(hasKafka())
 			kafkaTemplate.send(KafkaConfig.TOPIC_APPROVAL, msg);
+		else
+			LOGGER.warn("No Kafka. Request {} is not broadcast to everyone", msg.getId());
+	}
+	
+	private void sendImplementMessage(Request msg) {
+		if(hasKafka())
+			kafkaTemplate.send(KafkaConfig.TOPIC_IMPLEMENTATION, msg);
 		else
 			LOGGER.warn("No Kafka. Request {} is not broadcast to everyone", msg.getId());
 	}
