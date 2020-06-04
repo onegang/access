@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,6 +25,9 @@ public class ImplementationConsumer {
 	
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private KafkaTemplate<String, Request> kafkaTemplate;
 
 	@KafkaListener(
 			  topics = "ACCESS_IMPLEMENTATION", 
@@ -36,7 +40,7 @@ public class ImplementationConsumer {
 			else
 				implementChanges(request);
 		} else {
-			LOGGER.error("Non-approved request routed for implementation: {}", request.getId());
+			LOGGER.error("Non-implementing request routed for implementation: {}", request.getId());
 		}
 	}
 	
@@ -53,7 +57,10 @@ public class ImplementationConsumer {
 				for(String role: removed.getRoles())
 					userMapper.deleteUserRole(user, role);
 		}
+		request.setStatus(Status.DONE);
 		requestMapper.updateStatus(request.getId(), Status.DONE);
+		LOGGER.info("Sending DONE to approval workflow: {}", request);
+		kafkaTemplate.send("ACCESS_APPROVAL", request);
 		LOGGER.info("Implemented request {}", request.getId());
 	}
 

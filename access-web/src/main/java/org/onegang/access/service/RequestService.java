@@ -45,7 +45,7 @@ public class RequestService {
 		else if("CLOSED".equals(filter))
 			return accessDao.getClosedRequests(userService.getCurrentUser());
 		else if("FOR_ACTION".equals(filter))
-			return accessDao.getPendignActionRequests(userService.getCurrentUser());
+			return accessDao.getPendingActionRequests(userService.getCurrentUser());
 		else
 			throw new IllegalArgumentException("Unknown filter found: " + filter);
 	}

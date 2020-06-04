@@ -13,9 +13,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailImplementationConsumer {
+public class ImplementationConsumer {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmailImplementationConsumer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImplementationConsumer.class);
 	
 	@Value("${app-url}")
 	private String appUrl;
@@ -29,22 +29,21 @@ public class EmailImplementationConsumer {
 			  containerFactory = "kafkaListenerContainerFactory")
 	public void listen(Request request) {
 		LOGGER.debug("Received request: {} ", request);
-		if(Status.APPROVED==request.getStatus()) {
+		if(Status.IMPLEMENTING==request.getStatus()) {
 			String msg = request.getManual();
 			if(!Utils.isEmpty(msg)) {
 				for(String email: implementatorEmails) {
-					email(request, email, msg);
+					email(request, email, "Request SR-"+request.getId()+" needs your action: " + msg);
 				}
 			}
 		} else {
 			LOGGER.error("Non-approved request routed for implementation: {}", request.getId());
 		}
 	}
-
 	
 	private void email(Request request, String user, String msg) {
 		String url = toURL(request);
-		LOGGER.info("Implementor {}: {}: {}", user, msg, url);
+		LOGGER.info("{}: {}: {}", user, msg, url);
 	}
 
 	private String toURL(Request request) {
