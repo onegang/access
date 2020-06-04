@@ -81,26 +81,32 @@ public class RequestService {
 		Collection<Action> actions = Sets.newHashSet();
 		Request request = getRequest(id);
 		String me = userService.getCurrentUser();
-		for(ApprovalUser user: request.getSupporters()) {
-			if(user.getName().equals(me) && Status.PENDING==user.getStatus()) {
-				actions.add(Action.Approve);
-				actions.add(Action.Reject);
-				break;
-			}
-		}
-		for(ApprovalUser user: request.getApprovers()) {
-			if(user.getName().equals(me) && Status.PENDING==user.getStatus()) {
-				actions.add(Action.Approve);
-				actions.add(Action.Reject);
-				break;
-			}
-		}
-		if(request.getRequestor().equals(me) && request.getStatus()==Status.APPROVING) {
-			actions.add(Action.Cancel);
-		}
 		
-		if(DEBUG && request.getStatus()==Status.IMPLEMENTING)
-			actions.add(Action.Implement);
+		if(request.getStatus()==Status.APPROVING) {
+			for(ApprovalUser user: request.getSupporters()) {
+				if(user.getName().equals(me) && Status.PENDING==user.getStatus()) {
+					actions.add(Action.Approve);
+					actions.add(Action.Reject);
+					break;
+				}
+			}
+			for(ApprovalUser user: request.getApprovers()) {
+				if(user.getName().equals(me) && Status.PENDING==user.getStatus()) {
+					actions.add(Action.Approve);
+					actions.add(Action.Reject);
+					break;
+				}
+			}
+			if(request.getRequestor().equals(me)) {
+				actions.add(Action.Cancel);
+			}
+		} else if(request.getStatus()==Status.IMPLEMENTING) {
+			if(DEBUG)
+				actions.add(Action.Implement);
+		} else if(request.getStatus()==Status.DONE) {
+			if(DEBUG)
+				actions.add(Action.Restart);
+		}
 		return actions;
 	}
 
@@ -116,6 +122,8 @@ public class RequestService {
 			return doReject(request);
 		} else if(Action.Implement==action) {
 			return doImplement(request);
+		} else if(Action.Restart==action) {
+			return doRestart(request);
 		}
 		throw new IllegalArgumentException("Unknown action: " + action);
 	}
@@ -184,6 +192,20 @@ public class RequestService {
 		request.setStatus(Status.CANCELLED);
 		accessDao.updateStatus(request);
 		sendApprovalMessage(request);
+		return request;
+	}
+	
+	private Request doRestart(Request request) {
+		request.setStatus(Status.APPROVING);
+		accessDao.updateStatus(request);
+		for(ApprovalUser user: request.getSupporters()) {
+			user.setStatus(Status.PENDING);
+			accessDao.updateRequestSupport(request, user);
+		}
+		for(ApprovalUser user: request.getApprovers()) {
+			user.setStatus(Status.PENDING);
+			accessDao.updateRequestApprover(request, user);
+		}
 		return request;
 	}
 

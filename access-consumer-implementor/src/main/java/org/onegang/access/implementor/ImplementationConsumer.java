@@ -3,9 +3,11 @@ package org.onegang.access.implementor;
 
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
+import org.onegang.access.implementor.dao.RequestMapper;
 import org.onegang.access.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,8 @@ public class ImplementationConsumer {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImplementationConsumer.class);
 
+	@Autowired
+	private RequestMapper requestMapper;
 
 	@KafkaListener(
 			  topics = "ACCESS_IMPLEMENTATION", 
@@ -21,12 +25,10 @@ public class ImplementationConsumer {
 	public void listen(Request request) {
 		LOGGER.info("Received request: {} ", request);
 		if(Status.IMPLEMENTING==request.getStatus()) {
-			if(isManual(request)) {
+			if(isManual(request))
 				LOGGER.info("Skipping manual implementation for request {}", request.getId());
-			} else {
-				//TODO
+			else
 				implementChanges(request);
-			}
 		} else {
 			LOGGER.error("Non-approved request routed for implementation: {}", request.getId());
 		}
@@ -35,6 +37,7 @@ public class ImplementationConsumer {
 	private void implementChanges(Request request) {
 		LOGGER.info("Implementing request {}", request.getId());
 		//TODO
+		requestMapper.updateStatus(request.getId(), Status.DONE);
 	}
 
 	private boolean isManual(Request request) {
