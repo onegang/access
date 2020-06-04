@@ -1,15 +1,16 @@
 package org.onegang.access.service;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.onegang.access.ActionDeniedException;
-import org.onegang.access.KafkaConfig;
 import org.onegang.access.dao.AccessDao;
 import org.onegang.access.dto.Action;
 import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
+import org.onegang.access.kafka.Topics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +73,7 @@ public class RequestService {
 		return request;
 	}
 	
-	public Collection<Action> getRequestActions(int id) {
-//		if(true)
-//			return Lists.newArrayList("Cancel", "Approve", "Reject");
-		
+	public Collection<Action> getRequestActions(int id) {	
 		Collection<Action> actions = Sets.newHashSet();
 		Request request = getRequest(id);
 		String me = userService.getCurrentUser();
@@ -160,12 +158,24 @@ public class RequestService {
 		}
 		
 		if(approved) {
-			request.setStatus(Status.IMPLEMENTING);
+			request.setStatus(Status.APPROVED);
 			accessDao.updateStatus(request);
 			sendApprovalMessage(request);
-			sendImplementMessage(request);
+			
+			//now iff the effective date has passed (due to delays...)
+			//immediately change to implementing
+			if(isEffective(request)) {
+				request.setStatus(Status.IMPLEMENTING);
+				accessDao.updateStatus(request);
+				sendImplementingMessage(request);
+			}
 		}
 		return request;
+	}
+
+	private boolean isEffective(Request request) {
+		Date now = new Date();
+		return now.after(request.getEffectiveDate());
 	}
 
 	private Request doCancel(Request request) {
@@ -184,14 +194,14 @@ public class RequestService {
 
 	private void sendApprovalMessage(Request msg) {
 		if(hasKafka())
-			kafkaTemplate.send(KafkaConfig.TOPIC_APPROVAL, msg);
+			kafkaTemplate.send(Topics.APPROVAL, msg);
 		else
 			LOGGER.warn("No Kafka. Request {} is not broadcast to everyone", msg.getId());
 	}
 	
-	private void sendImplementMessage(Request msg) {
+	private void sendImplementingMessage(Request msg) {
 		if(hasKafka())
-			kafkaTemplate.send(KafkaConfig.TOPIC_IMPLEMENTATION, msg);
+			kafkaTemplate.send(Topics.IMPLEMENT, msg);
 		else
 			LOGGER.warn("No Kafka. Request {} is not broadcast to everyone", msg.getId());
 	}

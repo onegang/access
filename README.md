@@ -4,6 +4,14 @@
 
 A prototype to manage users access.
 
+It consists of the following modules:
+- a web application
+- a notification kafka consumer
+- an implementation kafka consumer
+ - makes the role changes
+ - monitors requests and effects it when it reaches effective date (i.e. pushed to kafka IMPLEMENT topic)
+- Extension points: more kafka implement consumers to mke changes (e.g. to other database, Active Directory, etc)
+
 [Demo (live master)](https://tinyurl.com/yaqqsddc)
 
 

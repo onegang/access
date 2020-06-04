@@ -7,6 +7,7 @@ import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.implementor.dao.RequestMapper;
 import org.onegang.access.implementor.dao.UserMapper;
+import org.onegang.access.kafka.Topics;
 import org.onegang.access.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class ImplementationConsumer {
 	private KafkaTemplate<String, Request> kafkaTemplate;
 
 	@KafkaListener(
-			  topics = "ACCESS_IMPLEMENTATION", 
+			  topics = Topics.IMPLEMENT, 
 			  containerFactory = "kafkaListenerContainerFactory")
 	public void listen(Request request) {
 		LOGGER.debug("Received request: {} ", request);
@@ -59,8 +60,8 @@ public class ImplementationConsumer {
 		}
 		request.setStatus(Status.DONE);
 		requestMapper.updateStatus(request.getId(), Status.DONE);
-		LOGGER.info("Sending DONE to approval workflow: {}", request);
-		kafkaTemplate.send("ACCESS_APPROVAL", request);
+		LOGGER.trace("Sending DONE to approval workflow: {}", request);
+		kafkaTemplate.send(Topics.APPROVAL, request);
 		LOGGER.info("Implemented request {}", request.getId());
 	}
 

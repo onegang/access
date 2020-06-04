@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.onegang.access.dao.RequestMapper" >
+<mapper namespace="org.onegang.access.implementor.dao.RequestMapper" >
 
     <resultMap id="RequestMap" autoMapping="true" type="org.onegang.access.entity.Request" >
     	<id property="id" column="id" jdbcType="INTEGER" />

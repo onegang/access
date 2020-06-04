@@ -2,7 +2,7 @@ package org.onegang.access.entity;
 
 /**
  * Workflow of status:
- * New -> Approving +-> Implementing -> Done
+ * New -> Approving --> Approved -> Implementing (on effective date) -> Done
  *                  +-> Rejected
  *                  +-> Cancelled 
  * 

@@ -2,10 +2,13 @@ package org.onegang.access.email;
 
 
 import java.util.Collection;
+import java.util.List;
 
 import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
+import org.onegang.access.kafka.Topics;
+import org.onegang.access.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,16 +24,20 @@ public class NotificationConsumer {
 	
 	@Value("${app-url}")
 	private String appUrl;
+	
+	@Value("#{T(java.util.Arrays).asList('${app-implementors-email:}')}")
+	private List<String> implementatorEmails;
 
 	@KafkaListener(
-			  topics = "ACCESS_APPROVAL", 
+			  topics = Topics.APPROVAL, 
 			  containerFactory = "kafkaListenerContainerFactory")
 	public void listen(Request request) {
 		LOGGER.debug("Received request: {} ", request);
 		if(Status.APPROVING==request.getStatus()) {
 			informApproving(request);
-		} else if(Status.IMPLEMENTING==request.getStatus()) { //i.e. Approved
+		} else if(Status.APPROVED==request.getStatus()) {
 			informApproved(request);
+			informManual(request);
 		} else if(Status.REJECTED==request.getStatus()) {
 			informRejected(request);
 		} else if(Status.CANCELLED==request.getStatus()) {
@@ -42,6 +49,17 @@ public class NotificationConsumer {
 		}
 	}
 	
+	private void informManual(Request request) {
+		String manual = request.getManual();
+		if(!Utils.isEmpty(manual)) {
+			String msg = "Request SR-"+request.getId()+" needs your action ";
+			msg += "(effective date: "+ Utils.formatDate(request.getEffectiveDate(), "yyyy-MM-dd") + "): " + manual;
+			for(String email: implementatorEmails) {
+				email(request, email, msg);
+			}
+		}
+	}
+
 	private void informImplemented(Request request) {
 		email(request, request.getRequestor(), "Your request SR-"+request.getId()+ " is implemented.");
 		//also inform the affected users

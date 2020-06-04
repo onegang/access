@@ -8,6 +8,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.onegang.access.entity.Request;
+import org.onegang.access.kafka.Topics;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +23,6 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 @Configuration
 @Profile("kafka")
 public class KafkaConfig {
-	
-	public static final String TOPIC_APPROVAL = "ACCESS_APPROVAL";
-	
-	public static final String TOPIC_IMPLEMENTATION = "ACCESS_IMPLEMENTATION";
-	
 
 	@Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
@@ -40,12 +36,12 @@ public class KafkaConfig {
      
     @Bean
     public NewTopic approvalTopic() {
-         return new NewTopic(TOPIC_APPROVAL, 1, (short) 1);
+         return new NewTopic(Topics.APPROVAL, 1, (short) 1);
     }
     
     @Bean
     public NewTopic implementationTopic() {
-         return new NewTopic(TOPIC_IMPLEMENTATION, 1, (short) 1);
+         return new NewTopic(Topics.IMPLEMENT, 1, (short) 1);
     }
     
     @Bean

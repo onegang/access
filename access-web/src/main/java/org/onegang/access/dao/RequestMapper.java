@@ -24,7 +24,7 @@ public interface RequestMapper {
 			+ "LEFT OUTER JOIN request_supporter s on s.requestId=r.id "
 			+ "LEFT OUTER JOIN request_approver a on a.requestId=r.id "
 			+ "WHERE ((s.user=#{submitter} AND s.status=#{status}) OR (a.user=#{submitter} AND a.status=#{status})) "
-			+ "AND ((r.status='APPROVING') OR (r.status='IMPLEMENTING'))"
+			+ "AND ((r.status='APPROVING') OR (r.status='APPROVED') OR (r.status='IMPLEMENTING'))"
 			+ "ORDER BY r.lastModifiedDate desc")
 	@ResultMap("RequestMap")
 	Collection<Request> selectApprovalRequestsOpened(String submitter, Status status);

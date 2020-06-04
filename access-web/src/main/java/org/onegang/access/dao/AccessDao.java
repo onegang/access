@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 @Repository
 public class AccessDao {
@@ -116,11 +117,12 @@ public class AccessDao {
 	}
 	
 	public Collection<Request> getPendingActionRequests(String submitter) {
-		return requestMapper.selectApprovalRequestsOpened(submitter, Status.PENDING);
+		return sortByLastModified(requestMapper.selectApprovalRequestsOpened(submitter, Status.PENDING));
 	}
 	
 	public Collection<Request> getOpenedRequests(String submitter) {
 		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.APPROVING);
+		requests.addAll(requestMapper.selectRequests(submitter, Status.APPROVED));
 		requests.addAll(requestMapper.selectRequests(submitter, Status.IMPLEMENTING));
 		requests.addAll(requestMapper.selectApprovalRequestsOpened(submitter, Status.PENDING));
 		requests = sortByLastModified(requests);
@@ -161,7 +163,7 @@ public class AccessDao {
 	}
 	
 	private Collection<Request> sortByLastModified(Collection<Request> requests) {
-		List<Request> sorted = Lists.newArrayList(requests);
+		List<Request> sorted = Lists.newArrayList(Sets.newHashSet(requests)); //make unique
 		Collections.sort(sorted, new Comparator<Request>() {
 			@Override
 			public int compare(Request o1, Request o2) {				
