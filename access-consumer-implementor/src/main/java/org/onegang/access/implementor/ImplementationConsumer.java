@@ -1,9 +1,12 @@
 package org.onegang.access.implementor;
 
 
+import org.onegang.access.entity.AccessChange;
+import org.onegang.access.entity.AccessChange.Change;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.implementor.dao.RequestMapper;
+import org.onegang.access.implementor.dao.UserMapper;
 import org.onegang.access.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +21,15 @@ public class ImplementationConsumer {
 
 	@Autowired
 	private RequestMapper requestMapper;
+	
+	@Autowired
+	private UserMapper userMapper;
 
 	@KafkaListener(
 			  topics = "ACCESS_IMPLEMENTATION", 
 			  containerFactory = "kafkaListenerContainerFactory")
 	public void listen(Request request) {
-		LOGGER.info("Received request: {} ", request);
+		LOGGER.debug("Received request: {} ", request);
 		if(Status.IMPLEMENTING==request.getStatus()) {
 			if(isManual(request))
 				LOGGER.info("Skipping manual implementation for request {}", request.getId());
@@ -35,9 +41,20 @@ public class ImplementationConsumer {
 	}
 	
 	private void implementChanges(Request request) {
-		LOGGER.info("Implementing request {}", request.getId());
-		//TODO
+		LOGGER.info("Implementing request {}...", request.getId());
+		AccessChange changes = request.getChanges();
+		for(Change added: changes.getAdded()) {
+			for(String user: added.getUsernames())
+				for(String role: added.getRoles())
+					userMapper.insertUserRole(user, role);
+		}
+		for(Change removed: changes.getRemoved()) {
+			for(String user: removed.getUsernames())
+				for(String role: removed.getRoles())
+					userMapper.deleteUserRole(user, role);
+		}
 		requestMapper.updateStatus(request.getId(), Status.DONE);
+		LOGGER.info("Implemented request {}", request.getId());
 	}
 
 	private boolean isManual(Request request) {
