@@ -24,8 +24,6 @@ public class RequestService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestService.class);
 	
-	private static final boolean DEBUG = true;
-	
 	@Autowired
 	private AccessDao accessDao;
 	
@@ -100,12 +98,6 @@ public class RequestService {
 			if(request.getRequestor().equals(me)) {
 				actions.add(Action.Cancel);
 			}
-		} else if(request.getStatus()==Status.IMPLEMENTING) {
-			if(DEBUG)
-				actions.add(Action.Implement);
-		} else if(request.getStatus()==Status.DONE) {
-			if(DEBUG)
-				actions.add(Action.Restart);
 		}
 		return actions;
 	}
@@ -120,10 +112,6 @@ public class RequestService {
 			return doApprove(request);
 		} else if(Action.Reject==action) {
 			return doReject(request);
-		} else if(Action.Implement==action) {
-			return doImplement(request);
-		} else if(Action.Restart==action) {
-			return doRestart(request);
 		}
 		throw new IllegalArgumentException("Unknown action: " + action);
 	}
@@ -179,33 +167,11 @@ public class RequestService {
 		}
 		return request;
 	}
-	
-	private Request doImplement(Request request) {		
-		//Only used for debugging
-		if(request.getStatus()==Status.IMPLEMENTING) {
-			sendImplementMessage(request);
-		}
-		return request;
-	}
 
 	private Request doCancel(Request request) {
 		request.setStatus(Status.CANCELLED);
 		accessDao.updateStatus(request);
 		sendApprovalMessage(request);
-		return request;
-	}
-	
-	private Request doRestart(Request request) {
-		request.setStatus(Status.APPROVING);
-		accessDao.updateStatus(request);
-		for(ApprovalUser user: request.getSupporters()) {
-			user.setStatus(Status.PENDING);
-			accessDao.updateRequestSupport(request, user);
-		}
-		for(ApprovalUser user: request.getApprovers()) {
-			user.setStatus(Status.PENDING);
-			accessDao.updateRequestApprover(request, user);
-		}
 		return request;
 	}
 
