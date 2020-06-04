@@ -1,47 +1,59 @@
-package org.onegang.access;
+package org.onegang.access.implementor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.onegang.access.entity.Request;
-import org.onegang.access.kafka.Topics;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
-
 @Configuration
-@Profile("kafka")
-public class KafkaConfig {
-
+@EnableKafka
+public class KakfaConfig {
+	
 	@Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
+	
+	@Value(value = "${spring.kafka.consumer.group-id}")
+    private String groupId;
+	
+	@Bean
+    public ConsumerFactory<String, Request> consumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(
+          ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, 
+          bootstrapAddress);
+        props.put(
+          ConsumerConfig.GROUP_ID_CONFIG, 
+          groupId);
+        return new DefaultKafkaConsumerFactory<>(
+        	      props,
+        	      new StringDeserializer(), 
+        	      new JsonDeserializer<>(Request.class));
+    }
  
     @Bean
-    public KafkaAdmin kafkaAdmin() {
-        Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        return new KafkaAdmin(configs);
-    }
-     
-    @Bean
-    public NewTopic approvalTopic() {
-         return new NewTopic(Topics.APPROVAL, 1, (short) 1);
-    }
+    public ConcurrentKafkaListenerContainerFactory<String, Request> 
+      kafkaListenerContainerFactory() {
     
-    @Bean
-    public NewTopic implementationTopic() {
-         return new NewTopic(Topics.IMPLEMENT, 1, (short) 1);
+        ConcurrentKafkaListenerContainerFactory<String, Request> factory =
+          new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+        return factory;
     }
     
     @Bean
@@ -63,4 +75,5 @@ public class KafkaConfig {
     public KafkaTemplate<String, Request> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
+    
 }

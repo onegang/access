@@ -1,5 +1,6 @@
 package org.onegang.access.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -12,6 +13,11 @@ public class Utils {
 		} catch (InterruptedException e) {
 			
 		}
+	}
+	
+	public static String formatDate(Date date, String format) {
+		SimpleDateFormat formatter = new SimpleDateFormat(format);
+		return formatter.format(date);
 	}
 	
 	public static boolean isEmpty(String value) {

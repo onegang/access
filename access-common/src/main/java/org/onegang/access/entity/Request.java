@@ -146,10 +146,33 @@ public class Request {
 	}
 
 	@Override
-	public String toString() {
-		return "Request [id=" + id + ", requestor=" + requestor + ", purpose=" + purpose + ", comments=" + comments
-				+ ", effectiveDate=" + effectiveDate + ", expiryDate=" + expiryDate + ", submitDate=" + submitDate
-				+ ", supporters=" + supporters + ", approvers=" + approvers + ", users=" + users + "]";
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Request other = (Request) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Request [id=" + id + ", status=" + status + ", requestor=" + requestor + ", purpose=" + purpose
+				+ ", comments=" + comments + ", manual=" + manual + ", effectiveDate=" + effectiveDate + ", expiryDate="
+				+ expiryDate + ", submitDate=" + submitDate + ", lastModifiedDate=" + lastModifiedDate + ", supporters="
+				+ supporters + ", approvers=" + approvers + ", users=" + users + ", changes=" + changes + "]";
+	}
+
 }

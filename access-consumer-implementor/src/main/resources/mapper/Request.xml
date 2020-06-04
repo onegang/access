@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.onegang.access.implementor.dao.RequestMapper" >
+
+    <resultMap id="RequestMap" autoMapping="true" type="org.onegang.access.entity.Request" >
+    	<id property="id" column="id" jdbcType="INTEGER" />
+        <collection property="supporters" ofType="org.onegang.access.entity.ApprovalUser" javaType="list">
+	        <result property="name" column="s_name" />
+	        <result property="status" column="s_status" />
+	    </collection>
+	    <collection property="approvers" ofType="org.onegang.access.entity.ApprovalUser" javaType="list">
+	        <result property="name" column="a_name" />
+	        <result property="status" column="a_status" />
+	    </collection>
+    </resultMap>
+</mapper>

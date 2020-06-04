@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 @Repository
 public class AccessDao {
@@ -115,14 +116,15 @@ public class AccessDao {
 		return request;
 	}
 	
-	public Collection<Request> getPendignActionRequests(String submitter) {
-		return requestMapper.selectApprovalRequests(submitter, Status.PENDING);
+	public Collection<Request> getPendingActionRequests(String submitter) {
+		return sortByLastModified(requestMapper.selectApprovalRequestsOpened(submitter, Status.PENDING));
 	}
 	
 	public Collection<Request> getOpenedRequests(String submitter) {
 		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.APPROVING);
+		requests.addAll(requestMapper.selectRequests(submitter, Status.APPROVED));
 		requests.addAll(requestMapper.selectRequests(submitter, Status.IMPLEMENTING));
-		requests.addAll(requestMapper.selectApprovalRequests(submitter, Status.PENDING));
+		requests.addAll(requestMapper.selectApprovalRequestsOpened(submitter, Status.PENDING));
 		requests = sortByLastModified(requests);
 		return requests;
 	}
@@ -131,8 +133,8 @@ public class AccessDao {
 		Collection<Request> requests = requestMapper.selectRequests(submitter, Status.CANCELLED);
 		requests.addAll(requestMapper.selectRequests(submitter, Status.REJECTED));
 		requests.addAll(requestMapper.selectRequests(submitter, Status.DONE));
-		requests.addAll(requestMapper.selectApprovalRequests(submitter, Status.APPROVED));
-		requests.addAll(requestMapper.selectApprovalRequests(submitter, Status.REJECTED));
+		requests.addAll(requestMapper.selectApprovalRequestsClosed(submitter, Status.APPROVED));
+		requests.addAll(requestMapper.selectApprovalRequestsClosed(submitter, Status.REJECTED));
 		requests = sortByLastModified(requests);
 		return requests;
 	}
@@ -161,7 +163,7 @@ public class AccessDao {
 	}
 	
 	private Collection<Request> sortByLastModified(Collection<Request> requests) {
-		List<Request> sorted = Lists.newArrayList(requests);
+		List<Request> sorted = Lists.newArrayList(Sets.newHashSet(requests)); //make unique
 		Collections.sort(sorted, new Comparator<Request>() {
 			@Override
 			public int compare(Request o1, Request o2) {				
