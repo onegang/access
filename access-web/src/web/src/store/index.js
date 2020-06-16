@@ -18,6 +18,8 @@ const defaultForm = {
 
 const store = new Vuex.Store({
   state: {
+    myaccess: {},
+    sysinfo: {},
     roles: [],
     users: [],
     stage: 0,
@@ -30,6 +32,8 @@ const store = new Vuex.Store({
   },
   getters: {
     getField,
+    SYSINFO: (state) => state.sysinfo,
+    MYACCESS: (state) => state.myaccess,
     ERROR: (state) => state.error,
     ROLES: (state) => state.roles,
     USERS: (state) => state.users,
@@ -42,6 +46,12 @@ const store = new Vuex.Store({
   },
   mutations: {
     updateField,
+    SET_SYSINFO: (state, sysinfo) => {
+      state.sysinfo = sysinfo;
+    },
+    SET_MYACCESS: (state, myaccess) => {
+      state.myaccess = myaccess;
+    },
     SET_ROLES: (state, roles) => {
       state.roles = roles;
     },
@@ -73,6 +83,14 @@ const store = new Vuex.Store({
     },
   },
   actions: {
+    GET_SYSINFO: async (context) => {
+      const { data } = await axios.get('/api/lookup/sysinfo');
+      context.commit('SET_SYSINFO', data);
+    },
+    GET_MYACCESS: async (context) => {
+      const { data } = await axios.get('/api/users/me');
+      context.commit('SET_MYACCESS', data);
+    },
     GET_ROLES: async (context) => {
       const { data } = await axios.get('/api/lookup/roles');
       context.commit('SET_ROLES', data);

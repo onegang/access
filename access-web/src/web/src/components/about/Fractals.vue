@@ -148,8 +148,9 @@ canvas {
 
 #particles-js {
   position: absolute;
-  width: 60%;
-  height: 60%;
+  width: 160px;
+  height: 100px;
+  margin-right: 160px;
   background-color: #ffffff;
   /*background-image: url("");*/
   background-repeat: no-repeat;

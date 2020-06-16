@@ -36,6 +36,13 @@ public class UsersService {
 		return accessDao.getUsers();
 	}
 	
+	public User getUser(String username) {
+		if("me".equalsIgnoreCase(username)) {
+			username = getCurrentUser();
+		}
+		return accessDao.getUser(username);
+	}
+	
 	public AccessChange computeChanges(Collection<User> users) {
 		LOGGER.debug("Computing changes for users...");
 		Collection<User> originalUsers = accessDao.getUsers(

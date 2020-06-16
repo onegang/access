@@ -7,6 +7,7 @@ import org.onegang.access.entity.User;
 import org.onegang.access.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,11 @@ public class UsersController {
 	@GetMapping
 	public Collection<User> getUsers() {
 		return usersService.getUsers();
+	}
+	
+	@GetMapping("/{username}")
+	public User getUser(@PathVariable String username) {
+		return usersService.getUser(username);
 	}
 	
 	@PostMapping("/changes")

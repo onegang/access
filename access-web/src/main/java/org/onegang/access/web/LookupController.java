@@ -3,6 +3,7 @@ package org.onegang.access.web;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.onegang.access.dto.SysInfo;
 import org.onegang.access.service.LookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,4 +21,10 @@ public class LookupController {
 	public Collection<String> getRoles() throws IOException {
 		return lookupService.getRoles();
 	}
+	
+	@GetMapping("/sysinfo")
+	public SysInfo getSysinfo() throws IOException {
+		return lookupService.getSysinfo();
+	}
+	
 }

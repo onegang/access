@@ -48,6 +48,10 @@ public class AccessDao {
 		return userMapper.selectUsers();
 	}
 	
+	public User getUser(String username) {
+		return userMapper.selectUser(username);
+	}
+	
 	public Collection<User> getUsers(Collection<String> names) {
 		return getUsers().stream().filter(user -> {
 			return names.contains(user.getName());
