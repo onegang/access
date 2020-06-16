@@ -68,16 +68,17 @@ public class UsersService {
 
 	public AccessChange combineChanges(AccessChange changes) {
 		// do a simple amalgation: if the roles are same, merge the users!
-		AccessChange merged = new AccessChange();
+		//then if the users are the same, merge the roles!
+		AccessChange userMerged = new AccessChange();
 		Map<String, List<AccessChange.Change>> added = changes.getAdded().stream().collect(
 				Collectors.groupingBy(change -> change.getRoles().toString()));
 		for(List<AccessChange.Change> change: added.values()) {
 			if(change.size()==1)
-				merged.added(Utils.first(change).getUsernames(), Utils.first(change).getRoles());
+				userMerged.added(Utils.first(change).getUsernames(), Utils.first(change).getRoles());
 			else {
 				Collection<String> users = change.stream().map(c -> 
 					Utils.first(c.getUsernames())).collect(Collectors.toSet());
-				merged.added(users, Utils.first(change).getRoles());
+				userMerged.added(users, Utils.first(change).getRoles());
 			}
 		}
 		
@@ -85,15 +86,52 @@ public class UsersService {
 				Collectors.groupingBy(change -> change.getRoles().toString()));
 		for(List<AccessChange.Change> change: removed.values()) {
 			if(change.size()==1)
-				merged.removed(Utils.first(change).getUsernames(), Utils.first(change).getRoles());
+				userMerged.removed(Utils.first(change).getUsernames(), Utils.first(change).getRoles());
 			else {
 				Collection<String> users = change.stream().map(c -> 
 					Utils.first(c.getUsernames())).collect(Collectors.toSet());
-				merged.removed(users, Utils.first(change).getRoles());
+				userMerged.removed(users, Utils.first(change).getRoles());
 			}
 		}
-		return merged;
+		
+		AccessChange rolesMerged = new AccessChange();
+		added = userMerged.getAdded().stream().collect(
+				Collectors.groupingBy(change -> change.getUsernames().toString()));
+		for(List<AccessChange.Change> change: added.values()) {
+			if(change.size()==1)
+				rolesMerged.added(Utils.first(change).getUsernames(), Utils.first(change).getRoles());
+			else {
+				Collection<String> roles = change.stream().map(c -> 
+					Utils.first(c.getRoles())).collect(Collectors.toSet());
+				rolesMerged.added(Utils.first(change).getUsernames(), roles);
+			}
+		}		
+		removed = userMerged.getRemoved().stream().collect(
+				Collectors.groupingBy(change -> change.getUsernames().toString()));
+		for(List<AccessChange.Change> change: removed.values()) {
+			if(change.size()==1)
+				rolesMerged.removed(Utils.first(change).getUsernames(), Utils.first(change).getRoles());
+			else {
+				Collection<String> roles = change.stream().map(c -> 
+					Utils.first(c.getRoles())).collect(Collectors.toSet());
+				rolesMerged.removed(Utils.first(change).getUsernames(), roles);
+			}
+		}
+		return sort(rolesMerged);
 	}
+	
+	private AccessChange sort(AccessChange changes) {
+		for(AccessChange.Change change: changes.getAdded()) {
+			change.setUsernames(Utils.sort(change.getUsernames()));
+			change.setRoles(Utils.sort(change.getRoles()));	
+		}
+		for(AccessChange.Change change: changes.getRemoved()) {
+			change.setUsernames(Utils.sort(change.getUsernames()));
+			change.setRoles(Utils.sort(change.getRoles()));	
+		}
+		return changes;
+	}
+	
 
 	private Collection<String> getDiff(Collection<String> oldValues, Collection<String> newValues) {
 		List<String> diff = Lists.newArrayList();
