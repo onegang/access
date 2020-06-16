@@ -26,6 +26,7 @@ const store = new Vuex.Store({
     error: null,
     requestForm: Object.assign({}, defaultForm),
     changes: null,
+    approvers: null,
     requests: null,
     requestDetail: null,
     requestActions: [],
@@ -40,6 +41,7 @@ const store = new Vuex.Store({
     STAGE: (state) => state.stage,
     REQUESTFORM: (state) => state.requestForm,
     CHANGES: (state) => state.changes,
+    APPROVERS: (state) => state.approvers,
     REQUESTS: (state) => state.requests,
     REQUESTDETAIL: (state) => state.requestDetail,
     REQUESTACTIONS: (state) => state.requestActions
@@ -66,6 +68,9 @@ const store = new Vuex.Store({
     },
     SET_CHANGES: (state, changes) => {
       state.changes = changes;
+    },
+    SET_APPROVERS: (state, approvers) => {
+      state.approvers = approvers;
     },
     SET_REQUESTS: (state, requests) => {
       state.requests = requests;
@@ -122,7 +127,17 @@ const store = new Vuex.Store({
           then((response) => {
             const changes = response.data;
             context.commit('SET_CHANGES', changes);
-          });
+        });
+
+        const users = context.state.users.filter(user => user.selected);
+        const request = Object.assign({}, context.state.requestForm, {users});
+        request.supporters = request.supporters.map(name => {return {name}});
+        request.approvers = request.approvers.map(name => {return {name}});
+        axios.post('/api/request/approvers', request).
+          then((response) => {
+            const approvers = response.data;
+            context.commit('SET_APPROVERS', approvers);
+        });       
       }
     },
     SUBMIT_REQUEST: (context) => {
@@ -138,6 +153,8 @@ const store = new Vuex.Store({
       context.dispatch('GET_USERS');
       context.dispatch('SET_STAGE', 0);
       context.commit('RESET_FORM', defaultForm);
+      context.commit('SET_APPROVERS', null);
+      context.commit('SET_CHANGES', null);
     },
     DO_ACTION: async (context, actionInfo) => {
       const id = actionInfo.id;

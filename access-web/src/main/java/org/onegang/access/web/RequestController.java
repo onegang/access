@@ -3,7 +3,9 @@ package org.onegang.access.web;
 import java.util.Collection;
 
 import org.onegang.access.ActionDeniedException;
+import org.onegang.access.ValidationException;
 import org.onegang.access.dto.Action;
+import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
 import org.onegang.access.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +43,13 @@ public class RequestController {
 		return requestService.doAction(id, action);
 	}
 	
+	@PostMapping("/approvers")
+	public Collection<ApprovalUser> getApprovers(@RequestBody Request request) throws ValidationException {
+		return requestService.getApprovers(request);
+	}
+	
 	@PostMapping
-	public Request submitRequest(@RequestBody Request request) {
+	public Request submitRequest(@RequestBody Request request) throws ValidationException {
 		return requestService.submitRequest(request);
 	}
 	

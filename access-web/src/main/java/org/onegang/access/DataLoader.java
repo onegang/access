@@ -33,6 +33,10 @@ public class DataLoader implements CommandLineRunner {
 	
 	private static final String MOCK_USER = "Alden Page, 10078";
 	
+	private static final String ROLE_APPROVERS = "Approvers";
+	
+	private static final String ROLE_DEVOPS_APPROVERS = "Devops Approvers";
+	
 	@Autowired
 	private AccessDao accessDao;
 	
@@ -58,8 +62,14 @@ public class DataLoader implements CommandLineRunner {
 		Collection<String> roles = Sets.newHashSet(userRoles);
 		roles.addAll(FileUtils.readLines(new File(
 				getClass().getClassLoader().getResource("mock/iam-roles.txt").getFile()), "utf-8"));
-		for(String role: roles)
-			accessDao.insertRole(role);
+		accessDao.insertRole(ROLE_APPROVERS, ROLE_APPROVERS);
+		accessDao.insertRole(ROLE_DEVOPS_APPROVERS, ROLE_APPROVERS);
+		for(String role: roles) {
+			if(role.contains("AWS") || role.contains("Devops"))
+				accessDao.insertRole(role, ROLE_DEVOPS_APPROVERS);
+			else
+				accessDao.insertRole(role, ROLE_APPROVERS);
+		}
 		return userRoles;
 	}
 	
@@ -70,6 +80,11 @@ public class DataLoader implements CommandLineRunner {
 			int id = getID(user);
 			String name = user + ", " + id;
 			Collection<String> roles = getRoles(user, allRoles);
+			if("Armani Dominguez, 17850".equals(name) ||
+				"Britney Vasquez, 3236".equals(name))
+				roles.add(ROLE_APPROVERS);
+			if("Amina Burch, 19822".equals(name))
+				roles.add(ROLE_DEVOPS_APPROVERS);
 			boolean active = id > 2300;
 			accessDao.insertUser(name, active, roles);
 		}

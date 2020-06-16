@@ -89,35 +89,38 @@ public interface RequestMapper {
 	Collection<UserRole> selectRequestEffectiveUserRoles(int id);
 	
 	@Insert("INSERT INTO request(requestor, status, effectiveDate, expiryDate, submitDate, "
-			+ "lastModifiedDate, purpose, comments, manual) VALUES("
-			+ "#{requestor}, #{status}, #{effectiveDate}, #{expiryDate}, CURRENT_TIMESTAMP(), "
+			+ "lastModifiedDate, purpose, comments, manual) "
+			+ "VALUES(#{requestor}, #{status}, #{effectiveDate}, #{expiryDate}, CURRENT_TIMESTAMP(), "
 			+ "CURRENT_TIMESTAMP(), #{purpose}, #{comments}, #{manual})")
 	@Options(useGeneratedKeys=true, keyProperty="id")
 	void insertRequest(Request request);
 	
-	@Insert("INSERT INTO request_user(requestId, user, role) VALUES("
-			+ "#{requestId}, #{user}, #{role})")
+	@Insert("INSERT INTO request_user(requestId, user, role) "
+			+ "VALUES(#{requestId}, #{user}, #{role})")
 	void insertRequestUser(int requestId, String user, String role);
 	
-	@Insert("INSERT INTO request_change(requestId, type, user, role) VALUES("
-			+ "#{requestId}, #{type}, #{user}, #{role})")
+	@Insert("INSERT INTO request_change(requestId, type, user, role) "
+			+ "VALUES(#{requestId}, #{type}, #{user}, #{role})")
 	void insertRequestChange(int requestId, String type, String user, String role);
 	
-	@Insert("INSERT INTO request_supporter(requestId, user, status) VALUES("
-			+ "#{requestId}, #{user}, #{status})")
+	@Insert("INSERT INTO request_supporter(requestId, user, status) "
+			+ "VALUES(#{requestId}, #{user}, #{status})")
 	void insertRequestSupporter(int requestId, String user, Status status);
 	
-	@Insert("INSERT INTO request_approver(requestId, user, status) VALUES("
-			+ "#{requestId}, #{user}, #{status})")
+	@Insert("INSERT INTO request_approver(requestId, user, status) "
+			+ "VALUES(#{requestId}, #{user}, #{status})")
 	void insertRequestApprover(int requestId, String user, Status status);
 	
-	@Update("UPDATE request_supporter SET status=#{status} WHERE requestId=#{requestId} AND user=#{user}")
+	@Update("UPDATE request_supporter SET status=#{status} "
+			+ "WHERE requestId=#{requestId} AND user=#{user}")
 	void updateRequestSupporter(int requestId, String user, Status status);
 	
-	@Update("UPDATE request_approver SET status=#{status} WHERE requestId=#{requestId} AND user=#{user}")
+	@Update("UPDATE request_approver SET status=#{status} "
+			+ "WHERE requestId=#{requestId} AND user=#{user}")
 	void updateRequestApprover(int requestId, String user, Status status);
 
-	@Update("UPDATE request SET status=#{status} WHERE id=#{id}")
+	@Update("UPDATE request SET status=#{status} "
+			+ "WHERE id=#{id}")
 	void updateStatus(int id, Status status);
 	
 }

@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS request_supporter;
 DROP TABLE IF EXISTS request_approver;
 DROP TABLE IF EXISTS request;
 DROP TABLE IF EXISTS user_role;
+DROP TABLE IF EXISTS role_approval;
 DROP TABLE IF EXISTS lookup_role;
 DROP TABLE IF EXISTS lookup_user;
 
@@ -14,6 +15,13 @@ CREATE TABLE lookup_user (
 );
 CREATE TABLE lookup_role (
   name   VARCHAR(250)  PRIMARY KEY
+);
+CREATE TABLE role_approval (
+  role VARCHAR(250),
+  approvingRole VARCHAR(250),
+  PRIMARY KEY( role),
+  FOREIGN KEY(role) REFERENCES lookup_role(name) ON DELETE CASCADE,
+  FOREIGN KEY(approvingRole) REFERENCES lookup_role(name) ON DELETE CASCADE
 );
 CREATE TABLE user_role (
   user VARCHAR(250),
