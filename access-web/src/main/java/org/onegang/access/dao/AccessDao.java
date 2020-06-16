@@ -31,8 +31,10 @@ public class AccessDao {
 	private RequestMapper requestMapper;
 	
 	
-	public void insertRole(String role) {
+	public void insertRole(String role, String approvingRole) {
 		userMapper.insertRole(role);
+		if(approvingRole!=null)
+			userMapper.insertApprovingRole(role, approvingRole);
 	}
 	
 	public void insertUser(String username, boolean active, Collection<String> roles) {
@@ -60,6 +62,10 @@ public class AccessDao {
 	
 	public Collection<String> getRoles() {
 		return userMapper.selectRoles();
+	}
+	
+	public Collection<ApprovalUser> getApprovingUsers(String role) {
+		return userMapper.selectApprovalUsers(role);
 	}
 	
 	public Request addRequest(Request request) {

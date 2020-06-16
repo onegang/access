@@ -4,13 +4,16 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.onegang.access.ActionDeniedException;
+import org.onegang.access.ValidationException;
 import org.onegang.access.dao.AccessDao;
 import org.onegang.access.dto.Action;
 import org.onegang.access.entity.AccessChange;
+import org.onegang.access.entity.AccessChange.Change;
 import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.kafka.Topics;
+import org.onegang.access.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +57,49 @@ public class RequestService {
 		request.setChanges(userService.combineChanges(request.getChanges()));
 		return request;
 	}
+	
+	public Collection<ApprovalUser> getApprovers(Request request) throws ValidationException {
+		if(!Utils.isEmpty(request.getApprovers()))
+			return request.getApprovers();
+		
+		//otherwise infer from the roles...
+		AccessChange changes = userService.computeChanges(request.getUsers());
+		Collection<String> changedRoles = Sets.newHashSet();
+		for(Change change: changes.getAdded()) {
+			changedRoles.addAll(change.getRoles());
+		}
+		for(Change change: changes.getRemoved()) {
+			changedRoles.addAll(change.getRoles());
+		}
+		
+		if(Utils.isEmpty(request.getManual()) && Utils.isEmpty(changedRoles))
+			throw new ValidationException("No changes specified. Please state the required access to add/remove and try again.");
+		
+		Collection<ApprovalUser> approvers = Sets.newHashSet();
+		for(String role: changedRoles) {
+			Collection<ApprovalUser> roleApprovers =  accessDao.getApprovingUsers(role);
+			LOGGER.info("Approvers for role {}: {}", role, roleApprovers.toString());
+			if(Utils.isEmpty(roleApprovers))
+				throw new ValidationException("Role " + role + " does not have any valid approvers. Please contact the Administrators.");
+			approvers.addAll(roleApprovers);
+		}
+		
+		if(Utils.isEmpty(approvers)) {
+			throw new ValidationException("No approvers specified. Please review and add approvers.");
+		}
+		
+		return approvers;
+	}
 
-	public Request submitRequest(Request request) {
+	public Request submitRequest(Request request) throws ValidationException {
 		LOGGER.info("Submitting request: {}", request.toString());
 		AccessChange changes = userService.computeChanges(request.getUsers());
 		
 		if(request.getPurpose()==null)
 			request.setPurpose("New request");
+		if(Utils.isEmpty(request.getApprovers())) {
+			request.setApprovers(getApprovers(request));
+		}
 		request.setStatus(Status.APPROVING);
 		for(ApprovalUser user: request.getSupporters())
 			user.setStatus(Status.PENDING);

@@ -21,10 +21,12 @@
       <ChangeItem v-for="(removed, index) in CHANGES.removed" :key="`remove-${index}`" :change="removed" type="REMOVE" />
     </div>
 
-    <h3 class="pt-10">Approvals</h3>
-    <v-divider class="pb-3" />
-    <div v-if="REQUESTFORM.approvers.length>0">Approvers: {{REQUESTFORM.approvers.join(", ")}}</div>
-    <v-skeleton-loader v-if="REQUESTFORM.approvers.length===0" type="list-item-avatar-two-line" />
+    <div v-if="hasChanges">
+      <h3 class="pt-10">Approvals</h3>
+      <v-divider class="pb-3" />
+      <div v-if="APPROVERS">Approvers: {{APPROVERS.map(user=>user.name).join(", ")}}</div>
+      <v-skeleton-loader v-if="APPROVERS==null" type="list-item-avatar-two-line" />
+    </div>
 
     <h3 class="pt-10">Effective User Access</h3>
     <v-divider class="pb-3" />
@@ -53,7 +55,7 @@ export default {
         return false;
       return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0 || this.REQUESTFORM.manual;
     },
-    ...mapGetters(['REQUESTFORM', 'USERS', 'CHANGES']),
+    ...mapGetters(['REQUESTFORM', 'USERS', 'CHANGES', 'APPROVERS']),
   },
 };
 </script>

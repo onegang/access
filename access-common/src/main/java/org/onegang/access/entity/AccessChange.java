@@ -71,9 +71,17 @@ public class AccessChange {
 		public Collection<String> getUsernames() {
 			return usernames;
 		}
+		
+		public void setUsernames(Collection<String> usernames) {
+			this.usernames = usernames;
+		}
 
 		public Collection<String> getRoles() {
 			return roles;
+		}
+
+		public void setRoles(Collection<String> roles) {
+			this.roles = roles;
 		}
 
 	}

@@ -3,7 +3,11 @@ package org.onegang.access.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public class Utils {
 
@@ -39,5 +43,13 @@ public class Utils {
 		c.setTime(date);
 		c.add(Calendar.DATE, days);
 		return c.getTime();
+	}
+	
+	public static <T extends Comparable<T>> Collection<T> sort(Collection<T> values) {
+		if(values==null || values.size()==1)
+			return values;
+		List<T> sorted = Lists.newArrayList(values);
+		Collections.sort(sorted);
+		return sorted;
 	}
 }
