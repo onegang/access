@@ -36,7 +36,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import UserDetails from './UserDetails.vue';
+import UserDetails from '../shared/UserDetails.vue';
 import ChangeItem from './ChangeItem.vue';
 
 export default {

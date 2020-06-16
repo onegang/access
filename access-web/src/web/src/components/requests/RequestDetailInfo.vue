@@ -34,7 +34,7 @@
       <span class="subtitle-2">Comments: </span>{{request.comments}}
     </div>
     <!-- <div v-if="request.attachments.length>0">Supporting Documents: {{request.attachments.map(file => file.name).join(", ")}}</div> -->
-    <div class="inline py-1">
+    <div v-if="request.supporters.length>0" class="inline py-1">
       <span class="subtitle-2">Supporters: </span>
       <v-chip v-for="(user, index) in request.supporters" :key="`s-${index}`"
         class="mx-1" label small
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import UserDetails from '../home/UserDetails.vue';
+import UserDetails from '../shared/UserDetails.vue';
 import ChangeItem from '../home/ChangeItem.vue';
 
 export default {
