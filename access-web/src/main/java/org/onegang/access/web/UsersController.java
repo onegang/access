@@ -6,7 +6,6 @@ import org.onegang.access.dto.UserInfo;
 import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.User;
 import org.onegang.access.service.UsersService;
-import org.onegang.access.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

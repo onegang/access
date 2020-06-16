@@ -1,34 +1,14 @@
 <template>
 <v-container>
-  <v-skeleton-loader v-if="REQUESTS===null" type="list-item-three-line" />
-  <v-data-iterator v-if="REQUESTS!==null"
-    :items="REQUESTS"
+  <v-skeleton-loader v-if="requests===null" type="list-item-three-line" />
+  <v-data-iterator v-if="requests!==null"
+    :items="requests"
     :page="page"
     no-data-text="No requests"
     sort-by="id"
     sort-desc
     hide-default-footer
   >
-    <template v-slot:header>
-      <v-row>
-        <v-col cols="3">
-          <h2>My Requests</h2>
-        </v-col>
-        <v-col cols="9">
-          <v-btn-toggle v-model="filter" mandatory light class="float-right" @change="changeFilter">
-            <v-btn value="FOR_ACTION">
-              For Action
-            </v-btn>
-            <v-btn value="OPENED">
-              Opened
-            </v-btn>
-            <v-btn value="CLOSED">
-              Closed
-            </v-btn>
-          </v-btn-toggle>
-        </v-col>
-      </v-row>
-    </template>
     <template v-slot:default="props">
       <v-expansion-panels multiple>
         <v-expansion-panel v-for="item in props.items" :key="item.id">
@@ -89,7 +69,6 @@
 
 <script>
 
-  import {mapGetters} from 'vuex';
   import moment from 'moment';
   import RequestListItem from './RequestListItem.vue'
 
@@ -97,21 +76,21 @@
     components: {
       RequestListItem,
     },
-    mounted() {
-      this.$store.dispatch('GET_REQUESTS', this.filter);
+    props: {
+      requests: {
+        type: Array
+      }
     },
     data() {
       return {
         page: 1,
         itemsPerPage: 10,
-        filter: "FOR_ACTION",
       };
     },
     computed: {
       numberOfPages() {
-        return Math.ceil(this.REQUESTS.length / this.itemsPerPage);
+        return Math.ceil(this.requests.length / this.itemsPerPage);
       },
-      ...mapGetters(['REQUESTS']),
     },
     methods: {
       nextPage() {
@@ -134,13 +113,6 @@
         else
           return "";
       },
-      changeFilter() {
-        this.$store.dispatch('GET_REQUESTS', this.filter);
-      },
     },
   };
 </script>
-
-<style scoped>
-  
-</style>

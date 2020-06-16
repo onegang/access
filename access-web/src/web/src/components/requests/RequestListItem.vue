@@ -1,7 +1,6 @@
 <template>
 <div>
-  <v-skeleton-loader type="list-item-two-line" />
-  <div class="inline pa-3">
+  <div v-if="request.supporters.length>0" class="inline pa-3">
     <span class="subtitle-2">Supporters: </span>
     <v-chip v-for="(user, index) in request.supporters" :key="`s-${index}`"
       class="mx-1" label small
