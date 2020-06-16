@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import UserDetails from '../home/UserDetails.vue';
+import UserDetails from '../shared/UserDetails.vue';
 import ChangeItem from '../home/ChangeItem.vue';
 
 export default {

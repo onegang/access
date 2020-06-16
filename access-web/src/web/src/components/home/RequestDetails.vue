@@ -129,7 +129,7 @@
 
 import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
-import UserDetails from './UserDetails.vue';
+import UserDetails from '../shared/UserDetails.vue';
 
 export default {
   components: {

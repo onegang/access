@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.onegang.access.dao.AccessDao;
+import org.onegang.access.dto.UserInfo;
 import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.User;
 import org.onegang.access.utils.Utils;
@@ -36,11 +37,14 @@ public class UsersService {
 		return accessDao.getUsers();
 	}
 	
-	public User getUser(String username) {
+	public UserInfo getUser(String username) {
 		if("me".equalsIgnoreCase(username)) {
 			username = getCurrentUser();
 		}
-		return accessDao.getUser(username);
+		UserInfo info = new UserInfo();
+		info.setUser(accessDao.getUser(username));
+		info.setRequests(accessDao.getUserAccessRequests(username));
+		return info;
 	}
 	
 	public AccessChange computeChanges(Collection<User> users) {

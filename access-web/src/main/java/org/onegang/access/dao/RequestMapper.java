@@ -64,6 +64,20 @@ public interface RequestMapper {
 			+ "FROM request r "
 			+ "LEFT OUTER JOIN request_supporter s on s.requestId=r.id "
 			+ "LEFT OUTER JOIN request_approver a on a.requestId=r.id "
+			+ "LEFT OUTER JOIN request_change rc on rc.requestId=r.id "
+			+ "WHERE rc.user=#{user} "
+			+ "ORDER BY r.lastModifiedDate desc")
+	@ResultMap("RequestMap")
+	Collection<Request> selectUserRequests(String user);
+	
+	@Select("SELECT r.id as id, r.status as status, r.requestor as requestor, r.purpose as purpose, "
+			+ "r.comments as comments, r.effectiveDate as effectiveDate, r.expiryDate as expiryDate, "
+			+ "r.submitDate as submitDate, r.lastModifiedDate as lastModifiedDate, r.manual as manual, "
+			+ "s.user as s_name, s.status as s_status, "
+			+ "a.user as a_name, a.status as a_status "
+			+ "FROM request r "
+			+ "LEFT OUTER JOIN request_supporter s on s.requestId=r.id "
+			+ "LEFT OUTER JOIN request_approver a on a.requestId=r.id "
 			+ "WHERE r.id=#{id}")
 	@ResultMap("RequestMap")
 	Request selectRequest(int id);

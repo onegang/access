@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.onegang.access.dao.AccessDao;
+import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
@@ -45,6 +46,7 @@ public class DataLoader implements CommandLineRunner {
 			List<String> userRoles = Lists.newArrayList(insertRoles());
 			insertUsers(userRoles);
 			insertRequests();
+			insertMockUserRequests();
 		} catch(Exception ex) {
 			LOGGER.error("Unable to load the mockup data fully", ex);
 		}
@@ -170,6 +172,34 @@ public class DataLoader implements CommandLineRunner {
 		request.setUsers(Lists.newArrayList(
 			new User("Aiyana Barber, 8769", Lists.newArrayList("Devops03"), true)));
 		request.setChanges(usersService.computeChanges(request.getUsers()));
+		accessDao.addRequest(request);
+	}
+	
+	private void insertMockUserRequests() {		
+		Request request  = new Request();
+		request.setStatus(Status.DONE);
+		request.setPurpose("Revoke Devops for Alden");
+		request.setEffectiveDate(Utils.addDays(new Date(), -112));
+		request.setRequestor("Adriel Lamb, 19732");
+		request.setApprovers(toApprovalUser("Amina Burch, 19822", Status.APPROVED));
+		request.setUsers(Lists.newArrayList(
+			new User(MOCK_USER, Lists.newArrayList("Researcher"), true)));
+		AccessChange changes = new AccessChange();
+		changes.removed(MOCK_USER, Lists.newArrayList("Devops01", "Devops03"));
+		request.setChanges(changes);
+		accessDao.addRequest(request);
+		
+		request  = new Request();
+		request.setStatus(Status.DONE);
+		request.setPurpose("Grant Manager to Alden Page");
+		request.setEffectiveDate(Utils.addDays(new Date(), -100));
+		request.setRequestor(MOCK_USER);
+		request.setApprovers(toApprovalUser("Amina Burch, 19822", Status.APPROVED));
+		request.setUsers(Lists.newArrayList(
+			new User(MOCK_USER, Lists.newArrayList("Manager", "Researcher"), true)));
+		changes = new AccessChange();
+		changes.added(MOCK_USER, Lists.newArrayList("Manager"));
+		request.setChanges(changes);
 		accessDao.addRequest(request);
 	}
 	

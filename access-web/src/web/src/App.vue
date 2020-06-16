@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import ErrorDialog from './components/utils/ErrorDialog.vue';
+import ErrorDialog from './components/shared/ErrorDialog.vue';
 
 export default {
   components: {

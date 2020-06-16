@@ -18,7 +18,7 @@ const defaultForm = {
 
 const store = new Vuex.Store({
   state: {
-    myaccess: {},
+    myaccess: null,
     sysinfo: {},
     roles: [],
     users: [],

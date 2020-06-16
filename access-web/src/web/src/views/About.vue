@@ -1,10 +1,6 @@
 <template>
   <div class="about">
-    <UserDetails class="pa-4" :user="MYACCESS" readonly />
-    <div class="pa-4">
-      <h4>Requests</h4>
-    </div>
-    <v-divider></v-divider>
+    <MyAccess />
     <div class="float-right pa-6">
       <h5>{{SYSINFO.system}} {{SYSINFO.version}}</h5>
       <Fractals />
@@ -15,20 +11,19 @@
 <script>
 import {mapGetters} from 'vuex';
 import Fractals from '../components/about/Fractals.vue';
-import UserDetails from '../components/home/UserDetails.vue';
+import MyAccess from '../components/about/MyAccess.vue';
 
 export default {
   name: 'About',
   components: {
     Fractals,
-    UserDetails,
+    MyAccess,
   },
   mounted() {
     this.$store.dispatch('GET_SYSINFO');
-    this.$store.dispatch('GET_MYACCESS');
   },
   computed: {
-    ...mapGetters(['SYSINFO', 'MYACCESS']),
+    ...mapGetters(['SYSINFO']),
   },
 };
 </script>

@@ -119,6 +119,10 @@ public class AccessDao {
 		request.setUsers(users);
 		return request;
 	}
+
+	public Collection<Request> getUserAccessRequests(String user) {
+		return requestMapper.selectUserRequests(user);
+	}
 	
 	public Collection<Request> getPendingActionRequests(String submitter) {
 		return sortByLastModified(requestMapper.selectApprovalRequestsOpened(submitter, Status.PENDING));
