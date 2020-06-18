@@ -60,6 +60,12 @@ public class AccessDao {
 		}).collect(Collectors.toList());
 	}
 	
+	public Collection<User> getUsersOfRole(String role) {
+		return getUsers().stream().filter(user -> {
+			return user.getRoles().contains(role);
+		}).collect(Collectors.toList());
+	}
+	
 	public Collection<String> getRoles() {
 		return userMapper.selectRoles();
 	}

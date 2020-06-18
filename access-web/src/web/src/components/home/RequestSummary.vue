@@ -11,21 +11,21 @@
 
     <h3 class="pt-10">Access Changes</h3>
     <v-divider class="pb-3" />
-    <v-skeleton-loader v-if="CHANGES===null" type="paragraph" />
+    <v-skeleton-loader v-if="REQUEST_CHANGES==null" type="paragraph" />
     <div v-if="!hasChanges">No changes!</div>
     <div v-if="REQUESTFORM.manual">{{REQUESTFORM.manual}}</div>
-    <div v-if="CHANGES && CHANGES.added">
-      <ChangeItem v-for="(added, index) in CHANGES.added" :key="`add-${index}`" :change="added" type="ADD" />
+    <div v-if="REQUEST_CHANGES && REQUEST_CHANGES.added">
+      <ChangeItem v-for="(added, index) in REQUEST_CHANGES.added" :key="`add-${index}`" :change="added" type="ADD" />
     </div>
-    <div v-if="CHANGES && CHANGES.removed">
-      <ChangeItem v-for="(removed, index) in CHANGES.removed" :key="`remove-${index}`" :change="removed" type="REMOVE" />
+    <div v-if="REQUEST_CHANGES && REQUEST_CHANGES.removed">
+      <ChangeItem v-for="(removed, index) in REQUEST_CHANGES.removed" :key="`remove-${index}`" :change="removed" type="REMOVE" />
     </div>
 
     <div v-if="hasChanges">
       <h3 class="pt-10">Approvals</h3>
       <v-divider class="pb-3" />
-      <div v-if="APPROVERS">Approvers: {{APPROVERS.map(user=>user.name).join(", ")}}</div>
-      <v-skeleton-loader v-if="APPROVERS==null" type="list-item-avatar-two-line" />
+      <div v-if="REQUEST_APPROVERS">Approvers: {{REQUEST_APPROVERS.map(user=>user.name).join(", ")}}</div>
+      <v-skeleton-loader v-if="REQUEST_APPROVERS==null" type="list-item-avatar-two-line" />
     </div>
 
     <h3 class="pt-10">Effective User Access</h3>
@@ -51,11 +51,11 @@ export default {
       return this.USERS.filter(user => user.selected);
     },
     hasChanges() {
-      if(this.CHANGES===null)
+      if(this.REQUEST_CHANGES==null)
         return false;
-      return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0 || this.REQUESTFORM.manual;
+      return this.REQUEST_CHANGES.added.length>0 || this.REQUEST_CHANGES.removed.length>0 || this.REQUESTFORM.manual;
     },
-    ...mapGetters(['REQUESTFORM', 'USERS', 'CHANGES', 'APPROVERS']),
+    ...mapGetters(['REQUESTFORM', 'USERS', 'REQUEST_CHANGES', 'REQUEST_APPROVERS']),
   },
 };
 </script>

@@ -31,6 +31,11 @@ public class UsersController {
 		return usersService.getUser(username);
 	}
 	
+	@GetMapping("/approvers")
+	public Collection<User> getApprovers() {
+		return usersService.getApprovers();
+	}
+	
 	@PostMapping("/changes")
 	public AccessChange getChanges(@RequestBody Collection<User> users) {
 		return usersService.computeChanges(users);

@@ -73,7 +73,7 @@
         <v-col cols="6" md="4">
           <v-autocomplete
             v-model="approvers"
-            :items="USERS"
+            :items="APPROVERS"
             item-text="name"
             item-value="name"
             chips
@@ -138,6 +138,8 @@ export default {
   mounted() {
       if(this.ROLES.length===0)
         this.$store.dispatch('GET_ROLES');
+      if(this.APPROVERS.length===0)
+        this.$store.dispatch('GET_APPROVERS');
     },
   data: () => ({
     effectiveDateMenu: false,
@@ -148,7 +150,7 @@ export default {
     selectedUsers() {
       return this.USERS.filter(user => user.selected);
     },
-    ...mapGetters(['USERS', 'ROLES']),
+    ...mapGetters(['USERS', 'ROLES', 'APPROVERS']),
     ...mapFields([
       'requestForm.effectiveDate',
       'requestForm.expiryDate',
