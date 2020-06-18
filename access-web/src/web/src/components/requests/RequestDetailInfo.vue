@@ -33,7 +33,13 @@
     <div v-if="request.comments" class="py-1">
       <span class="subtitle-2">Comments: </span>{{request.comments}}
     </div>
-    <!-- <div v-if="request.attachments.length>0">Supporting Documents: {{request.attachments.map(file => file.name).join(", ")}}</div> -->
+    <div v-if="request.attachments.length>0">
+      <span class="subtitle-2">Supporting Documents: </span>
+      <v-btn v-for="(attachment, index) in request.attachments" :key="`attach-${index}`"
+        class="mx-1" small text :href="attachment.link">
+        <v-icon class="pr-1">mdi-cloud-download</v-icon>{{attachment.filename}}
+      </v-btn>
+    </div>
     <div v-if="request.supporters.length>0" class="inline py-1">
       <span class="subtitle-2">Supporters: </span>
       <v-chip v-for="(user, index) in request.supporters" :key="`s-${index}`"

@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS request_user;
 DROP TABLE IF EXISTS request_change;
 DROP TABLE IF EXISTS request_supporter;
 DROP TABLE IF EXISTS request_approver;
+DROP TABLE IF EXISTS request_attachment;
 DROP TABLE IF EXISTS request;
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS role_approval;
@@ -42,6 +43,12 @@ CREATE TABLE request (
   purpose		CLOB			NOT NULL,
   comments		CLOB,
   manual		CLOB
+);
+CREATE TABLE request_attachment (
+  requestId   	INT,
+  filename		VARCHAR(250)	NOT NULL,
+  PRIMARY KEY(requestId, filename),
+  FOREIGN KEY(requestId) REFERENCES request(id) ON DELETE CASCADE
 );
 CREATE TABLE request_user (
   requestId   	INT,

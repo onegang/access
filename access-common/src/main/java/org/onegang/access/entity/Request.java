@@ -25,6 +25,8 @@ public class Request {
 	
 	private Date lastModifiedDate;
 	
+	private Collection<Attachment> attachments;
+	
 	private Collection<ApprovalUser> supporters;
 	
 	private Collection<ApprovalUser> approvers;
@@ -111,6 +113,14 @@ public class Request {
 
 	public void setPurpose(String purpose) {
 		this.purpose = purpose;
+	}
+
+	public Collection<Attachment> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Collection<Attachment> attachments) {
+		this.attachments = attachments;
 	}
 
 	public Collection<ApprovalUser> getSupporters() {
