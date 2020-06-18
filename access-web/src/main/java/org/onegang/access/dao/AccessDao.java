@@ -1,5 +1,13 @@
 package org.onegang.access.dao;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,14 +16,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
 import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.AccessChange.Change;
 import org.onegang.access.entity.ApprovalUser;
+import org.onegang.access.entity.Attachment;
 import org.onegang.access.entity.Request;
 import org.onegang.access.entity.Status;
 import org.onegang.access.entity.User;
 import org.onegang.access.entity.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Lists;
@@ -29,6 +42,9 @@ public class AccessDao {
 	
 	@Autowired
 	private RequestMapper requestMapper;
+	
+	@Value("${app-attachments-path}")
+	private String attachmentsPath;
 	
 	
 	public void insertRole(String role, String approvingRole) {
@@ -108,6 +124,11 @@ public class AccessDao {
 	
 	public Request getRequest(int id) {
 		Request request = requestMapper.selectRequest(id);
+		
+		for(Attachment attachment: request.getAttachments()) {
+			attachment.setLink("/api/request/"+id+"/attachments/"+attachment.getFilename());
+		}
+		
 		AccessChange changes = new AccessChange();
 		for(UserRole change: requestMapper.selectRequestChanges(id)) {
 			if("ADD".equals(change.getType()))
@@ -172,6 +193,31 @@ public class AccessDao {
 	public void updateStatus(Request request) {
 		request.setLastModifiedDate(new Date());
 		requestMapper.updateStatus(request.getId(), request.getStatus());
+	}
+
+	public void uploadAttachment(int requestId, String filename, InputStream input) throws IOException {
+		requestMapper.insertRequestAttachment(requestId, filename);
+		
+		File folder = new File(attachmentsPath, String.valueOf(requestId));
+		folder.mkdirs();
+		try(OutputStream output = new FileOutputStream(new File(folder, filename))) {
+			IOUtils.copy(input, output);
+		}
+	}
+	
+	public Resource downloadAttachment(int requestId, String filename) throws IOException {
+		Path storage = Paths.get(attachmentsPath+"/"+requestId).toAbsolutePath().normalize();
+		Path path = storage.resolve(filename).normalize();
+		try {
+			Resource resource = new UrlResource(path.toUri());
+			if(resource.exists()) {
+	            return resource;
+	        } else {
+	            throw new IOException("File not found for request " + requestId + ": " + filename);
+	        }
+		} catch (MalformedURLException e) {
+			throw new IOException("Unable to download file " + filename + " of request " + requestId, e);
+		}
 	}
 	
 	private void insertRequestChange(Change change, int requestId, String type) {

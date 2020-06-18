@@ -1,5 +1,7 @@
 package org.onegang.access.service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Date;
 
@@ -18,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -110,6 +113,17 @@ public class RequestService {
 		request = accessDao.addRequest(request);
 		sendApprovalMessage(request);
 		return request;
+	}
+	
+	public void uploadAttachment(int requestId, String filename, InputStream inputStream) throws IOException {
+		LOGGER.info("Uploading {} into request {}...", filename, requestId);
+		accessDao.uploadAttachment(requestId, filename, inputStream);
+		LOGGER.info("Uploaded {} into request {}", filename, requestId);
+	}
+	
+	public Resource downloadAttachment(int requestId, String filename) throws IOException {
+		LOGGER.info("Downloading {} of request {}...", filename, requestId);
+		return accessDao.downloadAttachment(requestId, filename);
 	}
 	
 	public Collection<Action> getRequestActions(int id) {	

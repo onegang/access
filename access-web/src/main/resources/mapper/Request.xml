@@ -12,5 +12,8 @@
 	        <result property="name" column="a_name" />
 	        <result property="status" column="a_status" />
 	    </collection>
+	    <collection property="attachments" ofType="org.onegang.access.entity.Attachment" javaType="list">
+	        <result property="filename" column="attach_filename" />
+	    </collection>
     </resultMap>
 </mapper>

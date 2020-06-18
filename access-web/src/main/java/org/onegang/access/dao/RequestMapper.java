@@ -74,10 +74,12 @@ public interface RequestMapper {
 			+ "r.comments as comments, r.effectiveDate as effectiveDate, r.expiryDate as expiryDate, "
 			+ "r.submitDate as submitDate, r.lastModifiedDate as lastModifiedDate, r.manual as manual, "
 			+ "s.user as s_name, s.status as s_status, "
-			+ "a.user as a_name, a.status as a_status "
+			+ "a.user as a_name, a.status as a_status, "
+			+ "attach.filename as attach_filename "
 			+ "FROM request r "
 			+ "LEFT OUTER JOIN request_supporter s on s.requestId=r.id "
 			+ "LEFT OUTER JOIN request_approver a on a.requestId=r.id "
+			+ "LEFT OUTER JOIN request_attachment attach on attach.requestId=r.id "
 			+ "WHERE r.id=#{id}")
 	@ResultMap("RequestMap")
 	Request selectRequest(int id);
@@ -110,6 +112,10 @@ public interface RequestMapper {
 	@Insert("INSERT INTO request_approver(requestId, user, status) "
 			+ "VALUES(#{requestId}, #{user}, #{status})")
 	void insertRequestApprover(int requestId, String user, Status status);
+	
+	@Insert("INSERT INTO request_attachment(requestId, filename) "
+			+ "VALUES(#{requestId}, #{filename})")
+	void insertRequestAttachment(int requestId, String filename);
 	
 	@Update("UPDATE request_supporter SET status=#{status} "
 			+ "WHERE requestId=#{requestId} AND user=#{user}")

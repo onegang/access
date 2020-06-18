@@ -150,13 +150,25 @@ const store = new Vuex.Store({
       }
     },
     SUBMIT_REQUEST: (context) => {
+      console.log(context.state.requestForm);
       const users = context.state.users.filter(user => user.selected);
       const request = Object.assign({}, context.state.requestForm, {users});
       request.supporters = request.supporters.map(name => {return {name}});
       request.approvers = request.approvers.map(name => {return {name}});
-      axios.post('/api/request', request).then(() => {
-        context.dispatch('RESET');
+      axios.post('/api/request', request).then((response) => {
+        const {id} = response.data;
+
+        //then append the attachments
+        let formData = new FormData();
+        const {attachments} = context.state.requestForm
+        for (let file of attachments) {
+          formData.append("files", file, file.name);
+        }
+        axios.post('/api/request/'+id+'/attachments', formData).then(() => {
+          context.dispatch('RESET');
+        });
       });
+
     },
     RESET: (context) => {
       context.dispatch('GET_USERS');
