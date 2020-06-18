@@ -22,11 +22,12 @@ const store = new Vuex.Store({
     sysinfo: {},
     roles: [],
     users: [],
+    approvers: [],
     stage: 0,
     error: null,
     requestForm: Object.assign({}, defaultForm),
-    changes: null,
-    approvers: null,
+    requestChanges: null,
+    requestApprovers: null,
     requests: null,
     requestDetail: null,
     requestActions: [],
@@ -38,11 +39,12 @@ const store = new Vuex.Store({
     ERROR: (state) => state.error,
     ROLES: (state) => state.roles,
     USERS: (state) => state.users,
-    STAGE: (state) => state.stage,
-    REQUESTFORM: (state) => state.requestForm,
-    CHANGES: (state) => state.changes,
     APPROVERS: (state) => state.approvers,
+    STAGE: (state) => state.stage,
     REQUESTS: (state) => state.requests,
+    REQUESTFORM: (state) => state.requestForm,
+    REQUEST_CHANGES: (state) => state.requestChanges,
+    REQUEST_APPROVERS: (state) => state.requestApprovers,
     REQUESTDETAIL: (state) => state.requestDetail,
     REQUESTACTIONS: (state) => state.requestActions
   },
@@ -60,17 +62,20 @@ const store = new Vuex.Store({
     SET_USERS: (state, users) => {
       state.users = users;
     },
+    SET_APPROVERS: (state, approvers) => {
+      state.approvers = approvers;
+    },
     SET_STAGE: (state, stage) => {
       state.stage = stage;
     },
     SET_ERROR: (state, error) => {
       state.error = error;
     },
-    SET_CHANGES: (state, changes) => {
-      state.changes = changes;
+    SET_REQUEST_CHANGES: (state, changes) => {
+      state.requestChanges = changes;
     },
-    SET_APPROVERS: (state, approvers) => {
-      state.approvers = approvers;
+    SET_REQUEST_APPROVERS: (state, approvers) => {
+      state.requestApprovers = approvers;
     },
     SET_REQUESTS: (state, requests) => {
       state.requests = requests;
@@ -104,6 +109,10 @@ const store = new Vuex.Store({
       const { data } = await axios.get('/api/users');
       context.commit('SET_USERS', data);
     },
+    GET_APPROVERS: async (context) => {
+      const { data } = await axios.get('/api/users/approvers');
+      context.commit('SET_APPROVERS', data);
+    },
     GET_REQUESTS: async (context, filter) => {
       const { data } = await axios.get('/api/request/filter/'+filter);
       context.commit('SET_REQUESTS', data);
@@ -126,7 +135,7 @@ const store = new Vuex.Store({
         axios.post('/api/users/changes', context.state.users.filter(user => user.selected)).
           then((response) => {
             const changes = response.data;
-            context.commit('SET_CHANGES', changes);
+            context.commit('SET_REQUEST_CHANGES', changes);
         });
 
         const users = context.state.users.filter(user => user.selected);
@@ -136,7 +145,7 @@ const store = new Vuex.Store({
         axios.post('/api/request/approvers', request).
           then((response) => {
             const approvers = response.data;
-            context.commit('SET_APPROVERS', approvers);
+            context.commit('SET_REQUEST_APPROVERS', approvers);
         });       
       }
     },
@@ -153,8 +162,8 @@ const store = new Vuex.Store({
       context.dispatch('GET_USERS');
       context.dispatch('SET_STAGE', 0);
       context.commit('RESET_FORM', defaultForm);
-      context.commit('SET_APPROVERS', null);
-      context.commit('SET_CHANGES', null);
+      context.commit('SET_REQUEST_APPROVERS', null);
+      context.commit('SET_REQUEST_CHANGES', null);
     },
     DO_ACTION: async (context, actionInfo) => {
       const id = actionInfo.id;

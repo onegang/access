@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.onegang.access.dao.AccessDao;
+import org.onegang.access.dto.SecurityConstants;
 import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.ApprovalUser;
 import org.onegang.access.entity.Request;
@@ -62,6 +63,7 @@ public class DataLoader implements CommandLineRunner {
 		Collection<String> roles = Sets.newHashSet(userRoles);
 		roles.addAll(FileUtils.readLines(new File(
 				getClass().getClassLoader().getResource("mock/iam-roles.txt").getFile()), "utf-8"));
+		accessDao.insertRole(SecurityConstants.APPROVAL_ROLE, SecurityConstants.APPROVAL_ROLE);
 		accessDao.insertRole(ROLE_APPROVERS, ROLE_APPROVERS);
 		accessDao.insertRole(ROLE_DEVOPS_APPROVERS, ROLE_APPROVERS);
 		for(String role: roles) {
@@ -85,6 +87,13 @@ public class DataLoader implements CommandLineRunner {
 				roles.add(ROLE_APPROVERS);
 			if("Amina Burch, 19822".equals(name))
 				roles.add(ROLE_DEVOPS_APPROVERS);
+			if("Allie Hickman, 4439".equals(name) ||
+				"Amiyah Norton, 4021".equals(name) ||
+				"Ariella Solis, 3629".equals(name) ||
+				"Brittany Neal, 9964".equals(name) ||
+				"Elisa Mathews, 3771".equals(name) ||
+				"Jadon Barnett, 2302".equals(name))
+				roles.add(SecurityConstants.APPROVAL_ROLE);
 			boolean active = id > 2300;
 			accessDao.insertUser(name, active, roles);
 		}

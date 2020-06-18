@@ -67,9 +67,9 @@ export default {
       return this.numberOfSelected===0;
     },
     hasChanges() {
-      if(this.CHANGES===null)
+      if(this.REQUEST_CHANGES==null)
         return false;
-      return this.CHANGES.added.length>0 || this.CHANGES.removed.length>0 || this.REQUESTFORM.manual;
+      return this.REQUEST_CHANGES.added.length>0 || this.REQUEST_CHANGES.removed.length>0 || this.REQUESTFORM.manual;
     },
     instructions() {
       if(this.STAGE===0) {
@@ -85,7 +85,7 @@ export default {
         return "";
       }
     },
-    ...mapGetters(['STAGE', 'USERS', 'CHANGES', 'REQUESTFORM']),
+    ...mapGetters(['STAGE', 'USERS', 'REQUEST_CHANGES', 'REQUESTFORM']),
   },
   methods: {
     toAccessForm() {

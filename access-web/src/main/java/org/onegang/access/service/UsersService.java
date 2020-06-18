@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.onegang.access.dao.AccessDao;
+import org.onegang.access.dto.SecurityConstants;
 import org.onegang.access.dto.UserInfo;
 import org.onegang.access.entity.AccessChange;
 import org.onegang.access.entity.User;
@@ -35,6 +36,10 @@ public class UsersService {
 
 	public Collection<User> getUsers() {
 		return accessDao.getUsers();
+	}
+	
+	public Collection<User> getApprovers() {
+		return accessDao.getUsersOfRole(SecurityConstants.APPROVAL_ROLE);
 	}
 	
 	public UserInfo getUser(String username) {
