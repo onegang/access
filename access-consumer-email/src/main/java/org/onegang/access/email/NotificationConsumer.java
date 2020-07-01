@@ -35,16 +35,16 @@ public class NotificationConsumer {
 	@Value("#{T(java.util.Arrays).asList('${app-implementors-email:}')}")
 	private List<String> implementatorEmails;
 	
-	@Value("${system-host}")
+	@Value("${email-host}")
 	private String emailHost;
 	
-	@Value("${system-port}")
+	@Value("${email-port}")
 	private int emailPort;
 	
-	@Value("${system-email}")
+	@Value("${email-system}")
 	private String systemEmail;
 	
-	@Value("${system-password}")
+	@Value("${email-system-password}")
 	private String systemPassword;
 	
 	@Autowired
@@ -142,6 +142,7 @@ public class NotificationConsumer {
 		String url = toURL(request);
 		String emailAddress = getEmail(user);
 		LOGGER.info("User {}: {}: {}", user, msg, url);
+		String subject = EmailConstants.EMAIL_PREFIX+"[SR-"+request.getId()+"] "+msg;
 		String content = user+",\n\n"+msg+
 				"\n\nRequest: "+request.getPurpose()+
 				"\nEffective date: "+Utils.formatDate(request.getEffectiveDate(), "yyyy-MM-dd")+
@@ -155,7 +156,7 @@ public class NotificationConsumer {
 		Email email = EmailBuilder.startingBlank()
 			.from("Access System", systemEmail)
 			.to(user, emailAddress)
-			.withSubject(msg)
+			.withSubject(subject)
 		    .withPlainText(content)
 		    .buildEmail();
 		Mailer mailer = MailerBuilder
@@ -170,9 +171,9 @@ public class NotificationConsumer {
 	}
 	
 	private String getEmail(String username) {
-		User user = userMapper.selectUser(username);
+		User user = userMapper.selectUserByName(username);
 		if(Utils.isEmpty(user.getEmail())) {
-			return "leethiamchye80@gmail.com"; //XXX for testing
+			return systemEmail; //XXX for testing
 		}
 		return user.getEmail();
 	}

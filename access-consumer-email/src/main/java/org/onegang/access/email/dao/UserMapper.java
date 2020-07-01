@@ -8,6 +8,9 @@ import org.onegang.access.entity.User;
 public interface UserMapper {
 
 	@Select("SELECT * FROM lookup_user WHERE name=#{username}")
-	User selectUser(String username);
+	User selectUserByName(String username);
+	
+	@Select("SELECT * FROM lookup_user WHERE email=#{email}")
+	User selectUserByEmail(String email);
 	
 }
