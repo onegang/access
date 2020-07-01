@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS lookup_user;
  
 CREATE TABLE lookup_user (
   name   VARCHAR(250)  PRIMARY KEY,
+  email  VARCHAR(250),
   active BOOLEAN     NOT NULL
 );
 CREATE TABLE lookup_role (
